@@ -1,6 +1,6 @@
 
-import React, { useState, useEffect } from 'react';
-import { Article, ArticleStatus } from '@/types';
+import React from 'react';
+import { Article, ArticleStatus, UserRole } from '@/types';
 import { Button } from "@/components/ui/button";
 import { formatDistanceToNow } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -17,6 +17,7 @@ import {
 
 interface ArticleCardProps {
   article: Article;
+  userRole: UserRole;
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onSubmitForModeration: (id: string) => void;
@@ -38,6 +39,7 @@ const STATUS_LABELS: Record<ArticleStatus, string> = {
 
 const ArticleCard: React.FC<ArticleCardProps> = ({
   article,
+  userRole,
   onEdit,
   onDelete,
   onSubmitForModeration,
@@ -47,19 +49,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   onReject,
   onArchive
 }) => {
-  // For bug #5 simulation (status not updating properly)
-  const [displayStatus, setDisplayStatus] = useState<ArticleStatus>(article.status);
-  
-  // Update display status when article changes
-  useEffect(() => {
-    // Simulate Bug #5: Status not updating after publishing from moderation
-    if (article.status === 'published' && displayStatus === 'moderation') {
-      // Don't update the display status to simulate the bug
-      // This will make it look like the status hasn't changed
-    } else {
-      setDisplayStatus(article.status);
-    }
-  }, [article.status]);
   
   const contentPreview = article.content.length > 100 
     ? `${article.content.substring(0, 100)}...` 
@@ -72,15 +61,22 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   });
   
   return (
-    <div className="article-card group">
+    <div className="article-card group relative">
+      {/* Edit indicator for previously edited published articles */}
+      {(article.status === 'published' || article.status === 'unpublished') && article.wasEdited && (
+        <div className="absolute top-2 right-2 text-blue-500" title="Статья была отредактирована">
+          <EditIcon className="h-4 w-4" />
+        </div>
+      )}
+      
       {/* Tooltip with ID and creation date - shows on hover */}
       <div className="tooltip top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mb-2">
         ID: {article.id.substring(0, 8)}... • Создано: {formattedDate}
       </div>
       
       {/* Status badge */}
-      <div className={`state-badge state-${displayStatus} mb-2`}>
-        {STATUS_LABELS[displayStatus]}
+      <div className={`state-badge state-${article.status} mb-2`}>
+        {STATUS_LABELS[article.status]}
       </div>
       
       {/* Article content */}
@@ -88,112 +84,109 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       <p className="article-card-content mt-1">{contentPreview}</p>
       <div className="text-xs text-gray-500 mt-1">Категория: {article.category}</div>
       
-      {/* Action buttons */}
+      {/* Action buttons based on user role and article status */}
       <div className="mt-3 flex flex-wrap items-center gap-2">
-        {/* Draft actions */}
-        {article.status === 'draft' && (
+        {/* User actions */}
+        {userRole === 'user' && (
           <>
-            <Button size="sm" variant="outline" onClick={() => onEdit(article.id)}>
-              <EditIcon className="h-3.5 w-3.5 mr-1" />
-              Редактировать
-            </Button>
-            <Button size="sm" variant="default" onClick={() => onSubmitForModeration(article.id)}>
-              <SendIcon className="h-3.5 w-3.5 mr-1" />
-              На модерацию
-            </Button>
-            <Button size="sm" variant="destructive" onClick={() => onDelete(article.id)}>
-              <TrashIcon className="h-3.5 w-3.5 mr-1" />
-              Удалить
-            </Button>
+            {/* Draft actions */}
+            {article.status === 'draft' && (
+              <>
+                <Button size="sm" variant="outline" onClick={() => onEdit(article.id)}>
+                  <EditIcon className="h-3.5 w-3.5 mr-1" />
+                  Редактировать
+                </Button>
+                <Button size="sm" variant="default" onClick={() => onSubmitForModeration(article.id)}>
+                  <SendIcon className="h-3.5 w-3.5 mr-1" />
+                  На модерацию
+                </Button>
+                <Button size="sm" variant="destructive" onClick={() => onDelete(article.id)}>
+                  <TrashIcon className="h-3.5 w-3.5 mr-1" />
+                  Удалить
+                </Button>
+              </>
+            )}
+            
+            {/* Rejected actions */}
+            {article.status === 'rejected' && (
+              <>
+                <Button size="sm" variant="outline" onClick={() => onEdit(article.id)}>
+                  <EditIcon className="h-3.5 w-3.5 mr-1" />
+                  Редактировать
+                </Button>
+                <Button size="sm" variant="default" onClick={() => onSubmitForModeration(article.id)}>
+                  <SendIcon className="h-3.5 w-3.5 mr-1" />
+                  На модерацию
+                </Button>
+                <Button size="sm" variant="destructive" onClick={() => onDelete(article.id)}>
+                  <TrashIcon className="h-3.5 w-3.5 mr-1" />
+                  Удалить
+                </Button>
+              </>
+            )}
+            
+            {/* Published actions for user */}
+            {article.status === 'published' && (
+              <>
+                <Button size="sm" variant="outline" onClick={() => onEdit(article.id)}>
+                  <EditIcon className="h-3.5 w-3.5 mr-1" />
+                  Редактировать
+                </Button>
+                <Button size="sm" variant="outline" className="bg-gray-100" onClick={() => onArchive(article.id)}>
+                  <ArchiveIcon className="h-3.5 w-3.5 mr-1" />
+                  В архив
+                </Button>
+              </>
+            )}
+            
+            {/* Unpublished actions for user */}
+            {article.status === 'unpublished' && (
+              <>
+                <Button size="sm" variant="outline" onClick={() => onEdit(article.id)}>
+                  <EditIcon className="h-3.5 w-3.5 mr-1" />
+                  Редактировать
+                </Button>
+                <Button size="sm" variant="outline" className="bg-gray-100" onClick={() => onArchive(article.id)}>
+                  <ArchiveIcon className="h-3.5 w-3.5 mr-1" />
+                  В архив
+                </Button>
+              </>
+            )}
           </>
         )}
         
-        {/* Moderation actions (moderator) */}
-        {article.status === 'moderation' && (
+        {/* Moderator actions */}
+        {userRole === 'moderator' && (
           <>
-            <Button size="sm" variant="outline" className="bg-green-100" onClick={() => onPublish(article.id)}>
-              <CheckIcon className="h-3.5 w-3.5 mr-1" />
-              Одобрить
-            </Button>
-            <Button size="sm" variant="outline" className="bg-red-100" onClick={() => onReject(article.id)}>
-              <XIcon className="h-3.5 w-3.5 mr-1" />
-              Отклонить
-            </Button>
-            <Button size="sm" variant="outline" className="bg-gray-100" onClick={() => onArchive(article.id)}>
-              <ArchiveIcon className="h-3.5 w-3.5 mr-1" />
-              В архив
-            </Button>
-          </>
-        )}
-        
-        {/* Rejected actions */}
-        {article.status === 'rejected' && (
-          <>
-            <Button size="sm" variant="outline" onClick={() => onEdit(article.id)}>
-              <EditIcon className="h-3.5 w-3.5 mr-1" />
-              Редактировать
-            </Button>
-            <Button size="sm" variant="default" onClick={() => onSubmitForModeration(article.id)}>
-              <SendIcon className="h-3.5 w-3.5 mr-1" />
-              На модерацию
-            </Button>
-            {/* BUG #1: Not supposed to be able to publish directly */}
-            <Button size="sm" variant="outline" className="bg-green-100" onClick={() => onPublish(article.id)}>
-              <CheckIcon className="h-3.5 w-3.5 mr-1" />
-              Опубликовать
-            </Button>
-            <Button size="sm" variant="destructive" onClick={() => onDelete(article.id)}>
-              <TrashIcon className="h-3.5 w-3.5 mr-1" />
-              Удалить
-            </Button>
-          </>
-        )}
-        
-        {/* Published actions */}
-        {article.status === 'published' && (
-          <>
-            {/* BUG #2: Not supposed to be able to edit */}
-            <Button size="sm" variant="outline" onClick={() => onEdit(article.id)}>
-              <EditIcon className="h-3.5 w-3.5 mr-1" />
-              Редактировать
-            </Button>
-            <Button size="sm" variant="outline" className="bg-gray-100" onClick={() => onUnpublish(article.id)}>
-              <EyeOffIcon className="h-3.5 w-3.5 mr-1" />
-              Снять с публикации
-            </Button>
-            <Button size="sm" variant="outline" className="bg-gray-100" onClick={() => onArchive(article.id)}>
-              <ArchiveIcon className="h-3.5 w-3.5 mr-1" />
-              В архив
-            </Button>
-          </>
-        )}
-        
-        {/* Unpublished actions */}
-        {article.status === 'unpublished' && (
-          <>
-            <Button size="sm" variant="outline" className="bg-green-100" onClick={() => onRepublish(article.id)}>
-              <EyeIcon className="h-3.5 w-3.5 mr-1" />
-              Опубликовать
-            </Button>
-            <Button size="sm" variant="outline" className="bg-gray-100" onClick={() => onArchive(article.id)}>
-              <ArchiveIcon className="h-3.5 w-3.5 mr-1" />
-              В архив
-            </Button>
-          </>
-        )}
-        
-        {/* Archived actions */}
-        {article.status === 'archived' && (
-          <>
-            {/* BUG #3: Not supposed to have actions in archived state */}
-            <Button size="sm" variant="outline" onClick={() => onEdit(article.id)}>
-              <EditIcon className="h-3.5 w-3.5 mr-1" />
-              Редактировать
-            </Button>
-            <Button size="sm" variant="outline" className="bg-green-100" onClick={() => onPublish(article.id)}>
-              <CheckIcon className="h-3.5 w-3.5 mr-1" />
-              Опубликовать
-            </Button>
+            {/* Moderation actions */}
+            {article.status === 'moderation' && (
+              <>
+                <Button size="sm" variant="outline" className="bg-green-100" onClick={() => onPublish(article.id)}>
+                  <CheckIcon className="h-3.5 w-3.5 mr-1" />
+                  Одобрить
+                </Button>
+                <Button size="sm" variant="outline" className="bg-red-100" onClick={() => onReject(article.id)}>
+                  <XIcon className="h-3.5 w-3.5 mr-1" />
+                  Отклонить
+                </Button>
+              </>
+            )}
+            
+            {/* Published actions for moderator */}
+            {article.status === 'published' && (
+              <Button size="sm" variant="outline" className="bg-gray-100" onClick={() => onUnpublish(article.id)}>
+                <EyeOffIcon className="h-3.5 w-3.5 mr-1" />
+                Снять с публикации
+              </Button>
+            )}
+            
+            {/* Unpublished actions for moderator */}
+            {article.status === 'unpublished' && (
+              <Button size="sm" variant="outline" className="bg-green-100" onClick={() => onRepublish(article.id)}>
+                <EyeIcon className="h-3.5 w-3.5 mr-1" />
+                Опубликовать
+              </Button>
+            )}
           </>
         )}
       </div>

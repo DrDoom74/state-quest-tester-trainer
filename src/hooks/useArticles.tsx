@@ -1,6 +1,6 @@
 
 import { useState, useCallback, useEffect } from 'react';
-import { Article, ArticleStatus, ActionType, ArticleCategory } from '@/types';
+import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useBugs } from './useBugs';
 import { toast } from "@/hooks/use-toast";
@@ -8,19 +8,37 @@ import { toast } from "@/hooks/use-toast";
 const ARTICLES_STORAGE_KEY = 'qa-simulator-articles';
 const MAX_ARTICLES = 10;
 
-// Define state transition rules
-const VALID_TRANSITIONS: Record<ArticleStatus, ActionType[]> = {
-  draft: ['edit', 'submitForModeration', 'delete'],
-  moderation: [],  // No actions for users on moderation state
-  rejected: ['edit', 'submitForModeration', 'delete'],
-  published: ['unpublish'],
-  unpublished: ['republish'],
-  archived: [], // No actions for archived
+// Define state transition rules based on user role
+const VALID_TRANSITIONS: Record<UserRole, Record<ArticleStatus, ActionType[]>> = {
+  user: {
+    draft: ['edit', 'submitForModeration', 'delete'],
+    moderation: [], // No actions for users on moderation state
+    rejected: ['edit', 'submitForModeration', 'delete'],
+    published: ['edit', 'archive'],
+    unpublished: ['edit', 'archive'],
+    archived: [], // No actions for archived
+  },
+  moderator: {
+    draft: [],
+    moderation: ['publish', 'reject'],
+    rejected: [],
+    published: ['unpublish'],
+    unpublished: ['republish'],
+    archived: [],
+  },
+  guest: {
+    draft: [],
+    moderation: [],
+    rejected: [],
+    published: [],
+    unpublished: [],
+    archived: [],
+  }
 };
 
 // Define the new states after actions
 const ACTION_RESULTS: Record<ActionType, (status: ArticleStatus) => ArticleStatus> = {
-  edit: (status) => status, // editing doesn't change status
+  edit: () => 'draft', // Editing always returns to draft state
   submitForModeration: () => 'moderation',
   publish: () => 'published',
   reject: () => 'rejected',
@@ -30,11 +48,16 @@ const ACTION_RESULTS: Record<ActionType, (status: ArticleStatus) => ArticleStatu
   delete: () => 'draft', // Just for type safety, deleted articles are removed
 };
 
-// Helper to simulate the moderator actions
-const MODERATOR_ACTIONS = ['publish', 'reject', 'archive'];
+// Define visibility rules for articles based on user role
+export const ARTICLE_VISIBILITY: Record<UserRole, ArticleStatus[]> = {
+  user: ['draft', 'moderation', 'rejected', 'published', 'unpublished', 'archived'],
+  moderator: ['moderation', 'rejected', 'published', 'unpublished'],
+  guest: ['published'],
+};
 
 export function useArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
+  const [activeRole, setActiveRole] = useState<UserRole>('user');
   const { checkForBug } = useBugs();
 
   useEffect(() => {
@@ -119,24 +142,12 @@ export function useArticles() {
       if (index === -1) return prev;
       
       const article = prev[index];
-      const validActions = VALID_TRANSITIONS[article.status];
+      const validActions = VALID_TRANSITIONS[activeRole][article.status] || [];
       
-      // Check for bugs - implement bug detection logic
-      const isBug = checkForBug(article.status, action);
-      
-      // If this is a bug, we allow the action to proceed to demonstrate it
-      let allow = validActions.includes(action) || isBug;
-      
-      // Allow moderator actions even if not listed in valid transitions
-      // (for simulation purposes)
-      if (MODERATOR_ACTIONS.includes(action)) {
-        allow = true;
-      }
-      
-      if (!allow) {
+      if (!validActions.includes(action)) {
         toast({
           title: "Действие недоступно",
-          description: `Нельзя выполнить "${action}" в текущем статусе "${article.status}"`,
+          description: `Нельзя выполнить "${action}" в текущем статусе "${article.status}" с ролью ${activeRole}`,
           variant: "destructive"
         });
         return prev;
@@ -152,23 +163,24 @@ export function useArticles() {
       const newArticles = [...prev];
       const newStatus = ACTION_RESULTS[action](article.status);
       
+      // Set wasEdited flag for when editing published/unpublished articles
+      let wasEdited = article.wasEdited;
+      if (action === 'edit' && (article.status === 'published' || article.status === 'unpublished')) {
+        wasEdited = true;
+      }
+      
       newArticles[index] = {
         ...article,
         status: newStatus,
+        wasEdited,
         updatedAt: new Date()
       };
-      
-      // Simulate Bug #5: Status not updating after publishing from moderation
-      if (article.status === 'moderation' && action === 'publish' && isBug) {
-        // Don't update the status to simulate the bug
-        // This will be handled in the UI
-      }
       
       return newArticles;
     });
     
     return success;
-  }, [checkForBug]);
+  }, [activeRole]);
 
   const clearAllArticles = useCallback(() => {
     setArticles([]);
@@ -178,8 +190,17 @@ export function useArticles() {
     });
   }, []);
 
+  const getVisibleArticles = useCallback(() => {
+    return articles.filter(article => 
+      ARTICLE_VISIBILITY[activeRole].includes(article.status)
+    );
+  }, [articles, activeRole]);
+
   return {
     articles,
+    visibleArticles: getVisibleArticles(),
+    activeRole,
+    setActiveRole,
     createArticle,
     updateArticle,
     performAction,

@@ -7,13 +7,17 @@ import BugTracker from '@/components/BugTracker';
 import ArticleForm from '@/components/ArticleForm';
 import { useArticles } from '@/hooks/useArticles';
 import { useBugs } from '@/hooks/useBugs';
-import { Article, ArticleCategory } from '@/types';
+import { Article, ArticleCategory, UserRole } from '@/types';
 import { toast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { UserIcon, ShieldIcon, EyeIcon } from 'lucide-react';
 
 const Index = () => {
   const { 
     articles, 
+    visibleArticles,
+    activeRole,
+    setActiveRole,
     createArticle, 
     updateArticle, 
     performAction, 
@@ -136,6 +140,10 @@ const Index = () => {
       });
     }
   };
+
+  const handleRoleChange = (role: UserRole) => {
+    setActiveRole(role);
+  };
   
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
@@ -154,8 +162,27 @@ const Index = () => {
             <TabsTrigger value="bugs">Найденные баги</TabsTrigger>
           </TabsList>
           <TabsContent value="articles">
+            <div className="mb-4">
+              <Tabs defaultValue="user" onValueChange={(value) => handleRoleChange(value as UserRole)}>
+                <TabsList className="mb-4">
+                  <TabsTrigger value="user">
+                    <UserIcon className="h-4 w-4 mr-2" />
+                    Пользователь 1
+                  </TabsTrigger>
+                  <TabsTrigger value="moderator">
+                    <ShieldIcon className="h-4 w-4 mr-2" />
+                    Модератор
+                  </TabsTrigger>
+                  <TabsTrigger value="guest">
+                    <EyeIcon className="h-4 w-4 mr-2" />
+                    Гость
+                  </TabsTrigger>
+                </TabsList>
+              </Tabs>
+            </div>
             <ArticleList 
-              articles={articles}
+              articles={visibleArticles}
+              userRole={activeRole}
               canCreateMore={canCreateMore}
               onCreateArticle={handleCreateArticle}
               onEditArticle={handleEditArticle}

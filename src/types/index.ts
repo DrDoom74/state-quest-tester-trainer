@@ -14,6 +14,11 @@ export type ArticleCategory =
   | 'Business' 
   | 'Entertainment';
 
+export type UserRole =
+  | 'user'
+  | 'moderator'
+  | 'guest';
+
 export interface Article {
   id: string;
   title: string;
@@ -22,6 +27,7 @@ export interface Article {
   category: ArticleCategory;
   createdAt: Date;
   updatedAt: Date;
+  wasEdited?: boolean;
 }
 
 export interface Bug {

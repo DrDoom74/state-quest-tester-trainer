@@ -37,8 +37,7 @@ const Header: React.FC<HeaderProps> = ({
                 className="text-white border-white hover:bg-white hover:text-primary"
               >
                 <RefreshCwIcon className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Сбросить прогресс</span>
-                <span className="sm:hidden">Сбросить</span>
+                <span>Сбросить прогресс</span>
               </Button>
               
               <Button 
@@ -48,8 +47,7 @@ const Header: React.FC<HeaderProps> = ({
                 className="text-white border-white hover:bg-white hover:text-primary"
               >
                 <TrashIcon className="h-4 w-4 mr-1" />
-                <span className="hidden sm:inline">Очистить блог</span>
-                <span className="sm:hidden">Очистить</span>
+                <span>Очистить блог</span>
               </Button>
             </div>
           </div>

@@ -6,43 +6,12 @@ import { toast } from "@/hooks/use-toast";
 const BUGS_STORAGE_KEY = 'qa-simulator-bugs';
 const BUGS_COUNT_KEY = 'qa-simulator-bugs-count';
 
-export const PREDEFINED_BUGS = [
-  {
-    id: 'bug-1',
-    description: 'Статья в статусе "Отклонена" может быть опубликована напрямую',
-    actionDescription: 'Опубликовать из статуса "Отклонена"',
-    conditionCheck: (fromStatus: string, action: string) => 
-      fromStatus === 'rejected' && action === 'publish'
-  },
-  {
-    id: 'bug-2',
-    description: 'Опубликованную статью можно редактировать',
-    actionDescription: 'Редактировать из статуса "Опубликована"',
-    conditionCheck: (fromStatus: string, action: string) => 
-      fromStatus === 'published' && action === 'edit'
-  },
-  {
-    id: 'bug-3',
-    description: 'Архивированную статью можно опубликовать или редактировать',
-    actionDescription: 'Любое действие из статуса "Архив"',
-    conditionCheck: (fromStatus: string, action: string) => 
-      fromStatus === 'archived' && ['edit', 'publish', 'submitForModeration', 'republish'].includes(action)
-  },
-  {
-    id: 'bug-4',
-    description: 'Проблема с отображением кнопок на мобильных устройствах',
-    actionDescription: 'Обрезание кнопок на экранах < 480px',
-    // This is detected in UI, not here
-    conditionCheck: () => false
-  },
-  {
-    id: 'bug-5',
-    description: 'Статус не обновляется при публикации статьи с модерации',
-    actionDescription: 'Публикация из статуса "На модерации"',
-    // This is simulated in UI, not detected here
-    conditionCheck: () => false
-  }
-];
+export const PREDEFINED_BUGS: { 
+  id: string;
+  description: string;
+  actionDescription: string;
+  conditionCheck: (fromStatus: string, action: string) => boolean;
+}[] = [];
 
 export function useBugs() {
   const [foundBugs, setFoundBugs] = useState<Bug[]>([]);

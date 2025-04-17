@@ -1,12 +1,13 @@
 
 import React from 'react';
-import { Article } from '@/types';
+import { Article, UserRole } from '@/types';
 import ArticleCard from './ArticleCard';
 import { PlusIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface ArticleListProps {
   articles: Article[];
+  userRole: UserRole;
   canCreateMore: boolean;
   onCreateArticle: () => void;
   onEditArticle: (id: string) => void;
@@ -21,6 +22,7 @@ interface ArticleListProps {
 
 const ArticleList: React.FC<ArticleListProps> = ({
   articles,
+  userRole,
   canCreateMore,
   onCreateArticle,
   onEditArticle,
@@ -32,30 +34,38 @@ const ArticleList: React.FC<ArticleListProps> = ({
   onReject,
   onArchive
 }) => {
+  const showCreateButton = userRole === 'user';
+  
   return (
     <div>
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">Статьи ({articles.length}/10)</h2>
-        <Button 
-          onClick={onCreateArticle} 
-          disabled={!canCreateMore}
-          className="relative"
-        >
-          <PlusIcon className="h-4 w-4 mr-1" />
-          Создать статью
-          
-          {/* BUG #4: On mobile screens, buttons will be cut off or overlap */}
-          <div className="absolute -bottom-6 left-0 w-full text-xs text-red-500 md:hidden">
-            {!canCreateMore && "Достигнут лимит статей"}
-          </div>
-        </Button>
+        {showCreateButton && (
+          <Button 
+            onClick={onCreateArticle} 
+            disabled={!canCreateMore}
+          >
+            <PlusIcon className="h-4 w-4 mr-1" />
+            Создать статью
+            
+            {!canCreateMore && (
+              <div className="absolute -bottom-6 left-0 w-full text-xs text-red-500">
+                {!canCreateMore && "Достигнут лимит статей"}
+              </div>
+            )}
+          </Button>
+        )}
       </div>
       
       {articles.length === 0 ? (
         <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
           <p className="text-gray-500">Нет статей для отображения</p>
           <p className="text-sm text-gray-400 mt-1">
-            Создайте новую статью, чтобы начать тестирование
+            {userRole === 'user' 
+              ? "Создайте новую статью, чтобы начать тестирование" 
+              : userRole === 'moderator'
+                ? "Нет статей на модерации или опубликованных"
+                : "Нет опубликованных статей"}
           </p>
         </div>
       ) : (
@@ -64,6 +74,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
             <ArticleCard
               key={article.id}
               article={article}
+              userRole={userRole}
               onEdit={onEditArticle}
               onDelete={onDeleteArticle}
               onSubmitForModeration={onSubmitForModeration}
