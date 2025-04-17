@@ -12,7 +12,8 @@ import {
   XIcon, 
   EyeOffIcon,
   EyeIcon,
-  TrashIcon
+  TrashIcon,
+  BookOpenIcon
 } from 'lucide-react';
 
 interface ArticleCardProps {
@@ -26,6 +27,7 @@ interface ArticleCardProps {
   onRepublish: (id: string) => void;
   onReject: (id: string) => void;
   onArchive: (id: string) => void;
+  onView: (id: string) => void;
 }
 
 const STATUS_LABELS: Record<ArticleStatus, string> = {
@@ -47,7 +49,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   onUnpublish,
   onRepublish,
   onReject,
-  onArchive
+  onArchive,
+  onView
 }) => {
   
   const contentPreview = article.content.length > 100 
@@ -61,7 +64,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   });
   
   return (
-    <div className="article-card group relative">
+    <div className="article-card group relative hover:shadow-md transition-shadow cursor-pointer" onClick={() => onView(article.id)}>
       {/* Edit indicator for previously edited published articles */}
       {(article.status === 'published' || article.status === 'unpublished') && article.wasEdited && (
         <div className="absolute top-2 right-2 text-blue-500" title="Статья была отредактирована">
@@ -85,7 +88,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       <div className="text-xs text-gray-500 mt-1">Категория: {article.category}</div>
       
       {/* Action buttons based on user role and article status */}
-      <div className="mt-3 flex flex-wrap items-center gap-2">
+      <div className="mt-3 flex flex-wrap items-center gap-2" onClick={(e) => e.stopPropagation()}>
         {/* User actions */}
         {userRole === 'user' && (
           <>
@@ -113,10 +116,6 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
                 <Button size="sm" variant="outline" onClick={() => onEdit(article.id)}>
                   <EditIcon className="h-3.5 w-3.5 mr-1" />
                   Редактировать
-                </Button>
-                <Button size="sm" variant="default" onClick={() => onSubmitForModeration(article.id)}>
-                  <SendIcon className="h-3.5 w-3.5 mr-1" />
-                  На модерацию
                 </Button>
                 <Button size="sm" variant="destructive" onClick={() => onDelete(article.id)}>
                   <TrashIcon className="h-3.5 w-3.5 mr-1" />
@@ -189,6 +188,15 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
             )}
           </>
         )}
+        
+        {/* View button for all roles */}
+        <Button size="sm" variant="ghost" onClick={(e) => {
+          e.stopPropagation();
+          onView(article.id);
+        }}>
+          <BookOpenIcon className="h-3.5 w-3.5 mr-1" />
+          Просмотр
+        </Button>
       </div>
     </div>
   );

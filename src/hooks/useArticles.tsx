@@ -13,7 +13,7 @@ const VALID_TRANSITIONS: Record<UserRole, Record<ArticleStatus, ActionType[]>> =
   user: {
     draft: ['edit', 'submitForModeration', 'delete'],
     moderation: [], // No actions for users on moderation state
-    rejected: ['edit', 'submitForModeration', 'delete'],
+    rejected: ['edit', 'delete'],
     published: ['edit', 'archive'],
     unpublished: ['edit', 'archive'],
     archived: [], // No actions for archived

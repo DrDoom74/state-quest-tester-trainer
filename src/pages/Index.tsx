@@ -5,6 +5,7 @@ import InstructionsPanel from '@/components/InstructionsPanel';
 import ArticleList from '@/components/ArticleList';
 import BugTracker from '@/components/BugTracker';
 import ArticleForm from '@/components/ArticleForm';
+import ArticleView from '@/components/ArticleView';
 import { useArticles } from '@/hooks/useArticles';
 import { useBugs } from '@/hooks/useBugs';
 import { Article, ArticleCategory, UserRole } from '@/types';
@@ -29,6 +30,7 @@ const Index = () => {
   
   const [showForm, setShowForm] = useState(false);
   const [editArticle, setEditArticle] = useState<Article | undefined>(undefined);
+  const [viewArticle, setViewArticle] = useState<Article | undefined>(undefined);
   
   // Form handling
   const handleCreateArticle = () => {
@@ -44,10 +46,18 @@ const Index = () => {
     }
   };
   
+  const handleViewArticle = (id: string) => {
+    const article = articles.find(a => a.id === id);
+    if (article) {
+      setViewArticle(article);
+    }
+  };
+  
   const handleFormSubmit = (title: string, content: string, category: ArticleCategory) => {
     if (editArticle) {
       const updated = updateArticle(editArticle.id, { title, content, category });
       if (updated) {
+        performAction(editArticle.id, 'edit');
         toast({
           title: "Статья обновлена",
           description: "Изменения сохранены успешно",
@@ -193,6 +203,7 @@ const Index = () => {
               onRepublish={handleRepublish}
               onReject={handleReject}
               onArchive={handleArchive}
+              onView={handleViewArticle}
             />
           </TabsContent>
           <TabsContent value="bugs">
@@ -206,6 +217,13 @@ const Index = () => {
           article={editArticle}
           onSubmit={handleFormSubmit}
           onCancel={handleCancelForm}
+        />
+      )}
+
+      {viewArticle && (
+        <ArticleView
+          article={viewArticle}
+          onClose={() => setViewArticle(undefined)}
         />
       )}
     </div>

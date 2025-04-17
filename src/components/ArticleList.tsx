@@ -18,6 +18,7 @@ interface ArticleListProps {
   onRepublish: (id: string) => void;
   onReject: (id: string) => void;
   onArchive: (id: string) => void;
+  onView: (id: string) => void;
 }
 
 const ArticleList: React.FC<ArticleListProps> = ({
@@ -32,7 +33,8 @@ const ArticleList: React.FC<ArticleListProps> = ({
   onUnpublish,
   onRepublish,
   onReject,
-  onArchive
+  onArchive,
+  onView
 }) => {
   const showCreateButton = userRole === 'user';
   
@@ -83,6 +85,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
               onRepublish={onRepublish}
               onReject={onReject}
               onArchive={onArchive}
+              onView={onView}
             />
           ))}
         </div>
