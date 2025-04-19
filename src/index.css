@@ -141,7 +141,8 @@
   
   @media (max-width: 767px) {
     .article-card {
-      @apply p-3;
+      @apply p-3 mx-3;
+      width: calc(100% - 24px);
     }
     
     .article-card-title {
@@ -155,6 +156,10 @@
     .state-badge {
       @apply text-[10px];
     }
+    
+    h1 {
+      @apply text-lg;
+    }
   }
 }
 
@@ -162,11 +167,9 @@
   .container {
     @apply px-4 md:px-6;
     max-width: 100%;
-  }
-  
-  @media (max-width: 767px) {
-    .container {
-      @apply px-3;
+    
+    @media (max-width: 767px) {
+      @apply px-2;
     }
   }
 }
