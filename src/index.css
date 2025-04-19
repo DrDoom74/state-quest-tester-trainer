@@ -153,7 +153,7 @@
     }
     
     .state-badge {
-      @apply text-2xs;
+      @apply text-[10px];
     }
   }
 }
