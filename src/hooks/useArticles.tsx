@@ -23,7 +23,7 @@ const VALID_TRANSITIONS: Record<UserRole, Record<ArticleStatus, ActionType[]>> =
     moderation: ['publish', 'reject'],
     rejected: [],
     published: ['unpublish'],
-    unpublished: ['republish'],
+    unpublished: [], // Removed republish action
     archived: [],
   },
   guest: {

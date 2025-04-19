@@ -11,6 +11,16 @@ interface ArticleViewProps {
   onClose: () => void;
 }
 
+// Add status translations
+const STATUS_LABELS: Record<string, string> = {
+  draft: 'Черновик',
+  moderation: 'На модерации',
+  rejected: 'Отклонена',
+  published: 'Опубликована',
+  unpublished: 'Снята с публикации',
+  archived: 'Архив'
+};
+
 const ArticleView: React.FC<ArticleViewProps> = ({ 
   article, 
   onClose 
@@ -55,7 +65,7 @@ const ArticleView: React.FC<ArticleViewProps> = ({
           <div className="space-y-2">
             <div className="text-sm font-medium text-gray-500">Статус</div>
             <div className="p-2 bg-gray-50 rounded border border-gray-200">
-              {article.status}
+              {STATUS_LABELS[article.status]}
             </div>
           </div>
           

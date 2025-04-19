@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -120,6 +119,8 @@
 
   .article-card {
     @apply relative border rounded-lg shadow-sm p-4 bg-white transition-all duration-200;
+    max-width: 100%;
+    margin-inline: auto;
   }
 
   .article-card:hover {
@@ -136,5 +137,36 @@
 
   .tooltip {
     @apply invisible absolute z-10 rounded bg-gray-800 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:visible group-hover:opacity-100;
+  }
+  
+  @media (max-width: 767px) {
+    .article-card {
+      @apply p-3;
+    }
+    
+    .article-card-title {
+      @apply text-base;
+    }
+    
+    .article-card-content {
+      @apply text-xs;
+    }
+    
+    .state-badge {
+      @apply text-2xs;
+    }
+  }
+}
+
+@layer utilities {
+  .container {
+    @apply px-4 md:px-6;
+    max-width: 100%;
+  }
+  
+  @media (max-width: 767px) {
+    .container {
+      @apply px-3;
+    }
   }
 }
