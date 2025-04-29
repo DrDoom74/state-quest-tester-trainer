@@ -66,108 +66,136 @@ const InstructionsPanel: React.FC = () => {
               <thead>
                 <tr className="bg-gray-100">
                   <th className="border px-2 py-1 text-left">Состояние</th>
-                  <th className="border px-2 py-1 text-left">Пользователь 1</th>
-                  <th className="border px-2 py-1 text-left">Модератор</th>
-                  <th className="border px-2 py-1 text-center">Гость</th>
+                  <th className="border px-2 py-1 text-left">Действие</th>
+                  <th className="border px-2 py-1 text-left">Переход в статус</th>
                 </tr>
               </thead>
               <tbody>
-                {[
-                  { 
-                    state: '**Черновик**', 
-                    user: 'Редактировать; Удалить; Отправить на модерацию → *На модерации*', 
-                    moderator: '—', 
-                    guest: '—' 
-                  },
-                  { 
-                    state: '**На модерации**', 
-                    user: '—', 
-                    moderator: 'Одобрить → *Опубликована*; Отклонить → *Отклонена*', 
-                    guest: '—' 
-                  },
-                  { 
-                    state: '**Отклонена**', 
-                    user: 'Редактировать → *Черновик*; Удалить', 
-                    moderator: '—', 
-                    guest: '—' 
-                  },
-                  { 
-                    state: '**Опубликована**', 
-                    user: 'Редактировать → *Черновик*; В архив → *Архив*', 
-                    moderator: 'Снять с публикации → *Снята с публикации*', 
-                    guest: '—' 
-                  },
-                  { 
-                    state: '**Снята с публикации**', 
-                    user: 'Редактировать → *Черновик*; В архив → *Архив*', 
-                    moderator: '—', 
-                    guest: '—' 
-                  },
-                  { 
-                    state: '**Архив**', 
-                    user: '—', 
-                    moderator: '—', 
-                    guest: '—' 
-                  }
-                ].map((row, index) => (
-                  <tr key={index}>
-                    <td className="border px-2 py-1" dangerouslySetInnerHTML={{__html: row.state}}></td>
-                    <td className="border px-2 py-1">{row.user}</td>
-                    <td className="border px-2 py-1">{row.moderator}</td>
-                    <td className="border px-2 py-1 text-center">{row.guest}</td>
-                  </tr>
-                ))}
+                <tr>
+                  <td className="border px-2 py-1 font-semibold" colSpan={3}>Пользователь 1</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Черновик</td>
+                  <td className="border px-2 py-1">Редактировать<br />Удалить<br />Отправить на модерацию</td>
+                  <td className="border px-2 py-1">На модерации</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">На модерации</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1">—</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Отклонена</td>
+                  <td className="border px-2 py-1">Редактировать<br />Удалить</td>
+                  <td className="border px-2 py-1">Черновик</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Опубликована</td>
+                  <td className="border px-2 py-1">Редактировать</td>
+                  <td className="border px-2 py-1">Черновик</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Опубликована</td>
+                  <td className="border px-2 py-1">В архив</td>
+                  <td className="border px-2 py-1">Архив</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Снята с публикации</td>
+                  <td className="border px-2 py-1">Редактировать</td>
+                  <td className="border px-2 py-1">Черновик</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Снята с публикации</td>
+                  <td className="border px-2 py-1">В архив</td>
+                  <td className="border px-2 py-1">Архив</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Архив</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1 font-semibold" colSpan={3}>Модератор</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Черновик</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">На модерации</td>
+                  <td className="border px-2 py-1">Одобрить</td>
+                  <td className="border px-2 py-1">Опубликована</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">На модерации</td>
+                  <td className="border px-2 py-1">Отклонить</td>
+                  <td className="border px-2 py-1">Отклонена</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Отклонена</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Опубликована</td>
+                  <td className="border px-2 py-1">Снять с публикации</td>
+                  <td className="border px-2 py-1">Снята с публикации</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Снята с публикации</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Архив</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1 font-semibold" colSpan={3}>Гость</td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Черновик</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">На модерации</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Отклонена</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Опубликована</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Снята с публикации</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
+                <tr>
+                  <td className="border px-2 py-1">Архив</td>
+                  <td className="border px-2 py-1">—</td>
+                  <td className="border px-2 py-1"></td>
+                </tr>
               </tbody>
             </table>
           </div>
           
           <div>
-            <h3 className="font-bold mb-2">3. Описание статусов статьи</h3>
-            {[
-              {
-                title: 'Черновик',
-                description: 'Статья создаётся автором и пока не отправлена на проверку.',
-                visibility: 'только Пользователю 1',
-                actions: 'редактировать, удалить, отправить на модерацию'
-              },
-              {
-                title: 'На модерации',
-                description: 'Статья передана модератору на проверку.',
-                visibility: 'Пользователю 1 и Модератору',
-                actions: 'только для Модератора – одобрить или отклонить'
-              },
-              {
-                title: 'Отклонена',
-                description: 'Модератор посчитал статью несоответствующей требованиям.',
-                visibility: 'Пользователю 1 и Модератору',
-                actions: 'для Пользователя 1 – редактировать (возврат в "Черновик"), удалить'
-              },
-              {
-                title: 'Опубликована',
-                description: 'Статья успешно прошла модерацию и доступна всем читателям.',
-                visibility: 'Пользователю 1, Модератору и Гостю',
-                actions: 'Пользователь 1 – редактировать (→ "Черновик"), в архив (→ "Архив"); Модератор – снять с публикации (→ "Снята с публикации")'
-              },
-              {
-                title: 'Снята с публикации',
-                description: 'Модератор удалил статью из публичного доступа.',
-                visibility: 'Пользователю 1 и Модератору',
-                actions: 'Пользователь 1 – редактировать (→ "Черновик"), в архив (→ "Архив")'
-              },
-              {
-                title: 'Архив',
-                description: 'Финальное состояние: статья сохраняется в истории, но больше не редактируется и не публикуется.',
-                visibility: 'только Пользователю 1',
-                actions: 'отсутствуют'
-              }
-            ].map((status, index) => (
-              <div key={index} className="mb-3">
-                <h4 className="font-semibold">{status.title}</h4>
-                <p><strong>Описание:</strong> {status.description}</p>
-                <p><strong>Видна:</strong> {status.visibility}.</p>
-                <p><strong>Действия:</strong> {status.actions}.</p>
-              </div>
-            ))}
+            <h3 className="font-bold mb-2">3. Описание требований к статье</h3>
+            <ul className="list-disc pl-5">
+              <li>Минимальное количество символов: 100</li>
+              <li>Максимальное количество символов: 1000</li>
+              <li>Максимально возможное количество статей: 5</li>
+            </ul>
           </div>
           
           <div>
