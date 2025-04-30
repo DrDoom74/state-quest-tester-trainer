@@ -68,8 +68,12 @@ export function useBugs() {
   }, [foundBugs, bugsCount]);
 
   const checkForBug = useCallback((bugId: string, description: string, actionDescription: string): boolean => {
+    console.log(`Checking for bug: ${bugId}, already found bugs:`, foundBugs);
+    
     // Check if this bug has already been found
     if (!foundBugs.some(found => found.id === bugId)) {
+      console.log(`Bug ${bugId} not found yet, adding to found bugs`);
+      
       const newBug: Bug = {
         id: bugId,
         description,
@@ -92,16 +96,21 @@ export function useBugs() {
       
       return true;
     }
+    
+    console.log(`Bug ${bugId} already found, not adding again`);
     return false;
   }, [foundBugs]);
 
   const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {
+    console.log(`Checking action for bug: status=${fromStatus}, action=${action}`);
+    
     // Find matching bug definition
     const matchingBug = PREDEFINED_BUGS.find(bug => 
       bug.conditionCheck(fromStatus, action) && !foundBugs.some(found => found.id === bug.id)
     );
     
     if (matchingBug) {
+      console.log(`Found matching bug: ${matchingBug.id}`);
       return checkForBug(
         matchingBug.id, 
         matchingBug.description, 
@@ -109,6 +118,7 @@ export function useBugs() {
       );
     }
     
+    console.log(`No matching bug found for status=${fromStatus}, action=${action}`);
     return false;
   }, [foundBugs, checkForBug]);
 

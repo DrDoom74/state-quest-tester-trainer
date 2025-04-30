@@ -62,15 +62,20 @@ const Index = () => {
   };
   
   const handleFormSubmit = (title: string, content: string, category: ArticleCategory) => {
+    console.log(`Submitting form with title: "${title}" (length: ${title.length})`);
+    
     // Check for bug with short title before doing anything else
     if (title.length < 5) {
+      console.log("Detected short title bug!");
+      // Force this to run after the current render cycle with a slightly longer timeout
       setTimeout(() => {
+        console.log("Checking for short title bug");
         checkForBug(
           'short-title-bug', 
           'Обнаружен баг! Заголовок статьи меньше 5 символов.', 
           'Создание статьи с коротким заголовком'
         );
-      }, 0);
+      }, 50);
     }
 
     if (editArticle) {
