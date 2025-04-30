@@ -31,23 +31,23 @@ const Header: React.FC<HeaderProps> = ({
             
             <div className="flex space-x-2">
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm" 
                 onClick={onResetBugsClick}
-                className="text-white border-white hover:bg-white hover:text-primary flex items-center"
+                className="bg-transparent text-white border border-white hover:bg-white hover:text-primary"
               >
                 <RefreshCwIcon className="h-4 w-4 mr-1" />
-                <span className="inline-block">Сбросить прогресс</span>
+                Сбросить прогресс
               </Button>
               
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="sm" 
                 onClick={onClearBlogClick}
-                className="text-white border-white hover:bg-white hover:text-primary flex items-center"
+                className="bg-transparent text-white border border-white hover:bg-white hover:text-primary"
               >
                 <TrashIcon className="h-4 w-4 mr-1" />
-                <span className="inline-block">Очистить блог</span>
+                Очистить блог
               </Button>
             </div>
           </div>
