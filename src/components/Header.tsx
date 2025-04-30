@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BugIcon, BookOpenIcon, RefreshCwIcon, TrashIcon } from 'lucide-react';
+import { BugIcon, BookOpenIcon, RefreshCwIcon, TrashIcon, ExternalLinkIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface HeaderProps {
@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({
   onClearBlogClick 
 }) => {
   return (
-    <header className="bg-primary text-white py-3 px-4 shadow-md">
+    <header className="bg-gradient-to-r from-indigo-600 to-violet-500 text-white py-3 px-4 shadow-md">
       <div className="container mx-auto">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
@@ -34,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({
                 variant="secondary" 
                 size="sm" 
                 onClick={onResetBugsClick}
-                className="bg-transparent text-white border border-white hover:bg-white hover:text-primary"
+                className="bg-white/10 text-white border border-white/30 hover:bg-white hover:text-violet-600"
               >
                 <RefreshCwIcon className="h-4 w-4 mr-1" />
                 Сбросить прогресс
@@ -44,10 +44,20 @@ const Header: React.FC<HeaderProps> = ({
                 variant="secondary" 
                 size="sm" 
                 onClick={onClearBlogClick}
-                className="bg-transparent text-white border border-white hover:bg-white hover:text-primary"
+                className="bg-white/10 text-white border border-white/30 hover:bg-white hover:text-violet-600"
               >
                 <TrashIcon className="h-4 w-4 mr-1" />
                 Очистить блог
+              </Button>
+              
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                className="bg-white/10 text-white border border-white/30 hover:bg-white hover:text-violet-600"
+                onClick={() => window.open('https://boosty.to/qa_klimenko', '_blank')}
+              >
+                <ExternalLinkIcon className="h-4 w-4 mr-1" />
+                Ответы
               </Button>
             </div>
           </div>

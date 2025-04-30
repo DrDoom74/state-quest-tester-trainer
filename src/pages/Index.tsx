@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
 import InstructionsPanel from '@/components/InstructionsPanel';
 import ArticleList from '@/components/ArticleList';
 import BugTracker from '@/components/BugTracker';
@@ -54,6 +54,13 @@ const Index = () => {
   };
   
   const handleFormSubmit = (title: string, content: string, category: ArticleCategory) => {
+    // Check for bug with short title
+    if (title.length < 5) {
+      const bugId = 'short-title-bug';
+      checkForBug(bugId, 'Обнаружен баг! Заголовок статьи меньше 5 символов.', 'Создание статьи с коротким заголовком');
+      return;
+    }
+
     if (editArticle) {
       const updated = updateArticle(editArticle.id, { title, content, category });
       if (updated) {
@@ -211,6 +218,8 @@ const Index = () => {
           </TabsContent>
         </Tabs>
       </main>
+      
+      <Footer />
       
       {showForm && (
         <ArticleForm 

@@ -71,8 +71,8 @@ const InstructionsPanel: React.FC = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td className="border px-2 py-1 font-semibold" colSpan={3}>Пользователь 1</td>
+                <tr className="bg-gray-200 font-semibold">
+                  <td className="border px-2 py-1" colSpan={3}>Пользователь 1</td>
                 </tr>
                 <tr>
                   <td className="border px-2 py-1">Черновик</td>
@@ -114,8 +114,8 @@ const InstructionsPanel: React.FC = () => {
                   <td className="border px-2 py-1">—</td>
                   <td className="border px-2 py-1"></td>
                 </tr>
-                <tr>
-                  <td className="border px-2 py-1 font-semibold" colSpan={3}>Модератор</td>
+                <tr className="bg-gray-200 font-semibold">
+                  <td className="border px-2 py-1" colSpan={3}>Модератор</td>
                 </tr>
                 <tr>
                   <td className="border px-2 py-1">Черновик</td>
@@ -152,8 +152,8 @@ const InstructionsPanel: React.FC = () => {
                   <td className="border px-2 py-1">—</td>
                   <td className="border px-2 py-1"></td>
                 </tr>
-                <tr>
-                  <td className="border px-2 py-1 font-semibold" colSpan={3}>Гость</td>
+                <tr className="bg-gray-200 font-semibold">
+                  <td className="border px-2 py-1" colSpan={3}>Гость</td>
                 </tr>
                 <tr>
                   <td className="border px-2 py-1">Черновик</td>
@@ -194,7 +194,7 @@ const InstructionsPanel: React.FC = () => {
             <ul className="list-disc pl-5">
               <li>Минимальное количество символов в заголовке: 5</li>
               <li>Максимальное количество символов в заголовке: 100</li>
-              <li>Минимальное количество символов в содержании: 100</li>
+              <li>Минимальное количество символов в содержании: 20</li>
               <li>Максимальное количество символов в содержании: 1000</li>
               <li>Максимально возможное количество статей: 10</li>
             </ul>

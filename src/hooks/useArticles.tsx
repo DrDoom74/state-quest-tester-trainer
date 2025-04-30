@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,7 +22,7 @@ const VALID_TRANSITIONS: Record<UserRole, Record<ArticleStatus, ActionType[]>> =
     moderation: ['publish', 'reject'],
     rejected: [],
     published: ['unpublish'],
-    unpublished: [], // Removed republish action
+    unpublished: ['republish'], // Added republish action for bug detection
     archived: [],
   },
   guest: {
@@ -58,7 +57,7 @@ export const ARTICLE_VISIBILITY: Record<UserRole, ArticleStatus[]> = {
 export function useArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [activeRole, setActiveRole] = useState<UserRole>('user');
-  const { checkForBug } = useBugs();
+  const { checkActionForBug } = useBugs();
 
   useEffect(() => {
     // Load articles from localStorage
@@ -153,6 +152,11 @@ export function useArticles() {
         return prev;
       }
       
+      // Check for bug when moderator tries to republish an unpublished article
+      if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
+        checkActionForBug(article.status, action);
+      }
+      
       success = true;
       
       if (action === 'delete') {
@@ -180,7 +184,7 @@ export function useArticles() {
     });
     
     return success;
-  }, [activeRole]);
+  }, [activeRole, checkActionForBug]);
 
   const clearAllArticles = useCallback(() => {
     setArticles([]);

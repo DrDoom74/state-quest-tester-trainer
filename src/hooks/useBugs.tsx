@@ -11,7 +11,21 @@ export const PREDEFINED_BUGS: {
   description: string;
   actionDescription: string;
   conditionCheck: (fromStatus: string, action: string) => boolean;
-}[] = [];
+}[] = [
+  {
+    id: 'short-title-bug',
+    description: 'Обнаружен баг! Заголовок статьи меньше 5 символов.',
+    actionDescription: 'Создание статьи с коротким заголовком',
+    conditionCheck: () => true // This is manually checked in the form submission
+  },
+  {
+    id: 'republish-unpublished-bug',
+    description: 'Обнаружен баг! Модератор может опубликовывать снятую с публикации статью.',
+    actionDescription: 'Попытка опубликовать снятую с публикации статью',
+    conditionCheck: (fromStatus, action) => 
+      fromStatus === 'unpublished' && action === 'republish'
+  }
+];
 
 export function useBugs() {
   const [foundBugs, setFoundBugs] = useState<Bug[]>([]);
@@ -46,30 +60,38 @@ export function useBugs() {
     localStorage.setItem(BUGS_COUNT_KEY, bugsCount.toString());
   }, [foundBugs, bugsCount]);
 
-  const checkForBug = useCallback((fromStatus: string, action: string): boolean => {
-    for (const bug of PREDEFINED_BUGS) {
-      if (bug.conditionCheck(fromStatus, action) && !foundBugs.some(found => found.id === bug.id)) {
-        const newBug: Bug = {
-          id: bug.id,
-          description: bug.description,
-          actionDescription: bug.actionDescription,
-          dateFound: new Date()
-        };
-        
-        setFoundBugs(prev => [...prev, newBug]);
-        setBugsCount(prev => prev + 1);
-        
-        toast({
-          title: "Поздравляем! Баг найден!",
-          description: bug.description,
-          variant: "destructive"
-        });
-        
-        return true;
-      }
+  const checkForBug = useCallback((bugId: string, description: string, actionDescription: string): boolean => {
+    // Check if this bug has already been found
+    if (!foundBugs.some(found => found.id === bugId)) {
+      const newBug: Bug = {
+        id: bugId,
+        description,
+        actionDescription,
+        dateFound: new Date()
+      };
+      
+      setFoundBugs(prev => [...prev, newBug]);
+      setBugsCount(prev => prev + 1);
+      
+      toast({
+        title: "Поздравляем! Баг найден!",
+        description,
+        variant: "destructive"
+      });
+      
+      return true;
     }
     return false;
   }, [foundBugs]);
+
+  const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {
+    for (const bug of PREDEFINED_BUGS) {
+      if (bug.conditionCheck(fromStatus, action) && !foundBugs.some(found => found.id === bug.id)) {
+        return checkForBug(bug.id, bug.description, bug.actionDescription);
+      }
+    }
+    return false;
+  }, [foundBugs, checkForBug]);
 
   const resetBugs = useCallback(() => {
     setFoundBugs([]);
@@ -86,6 +108,7 @@ export function useBugs() {
     foundBugs,
     bugsCount,
     checkForBug,
+    checkActionForBug,
     resetBugs,
   };
 }
