@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -50,6 +49,14 @@ const Index = () => {
   const handleViewArticle = (id: string) => {
     const article = articles.find(a => a.id === id);
     if (article) {
+      // Check for archived article bug
+      if (article.status === 'archived' && activeRole !== 'user') {
+        checkForBug(
+          'archived-article-bug', 
+          'Баг обнаружен. Статья в статусе Архив доступна для просмотра другим пользователям.', 
+          'Просмотр статьи в статусе Архив'
+        );
+      }
       setViewArticle(article);
     }
   };
@@ -57,8 +64,11 @@ const Index = () => {
   const handleFormSubmit = (title: string, content: string, category: ArticleCategory) => {
     // Check for bug with short title, but still create the article
     if (title.length < 5) {
-      const bugId = 'short-title-bug';
-      checkForBug(bugId, 'Обнаружен баг! Заголовок статьи меньше 5 символов.', 'Создание статьи с коротким заголовком');
+      checkForBug(
+        'short-title-bug', 
+        'Обнаружен баг! Заголовок статьи меньше 5 символов.', 
+        'Создание статьи с коротким заголовком'
+      );
     }
 
     if (editArticle) {

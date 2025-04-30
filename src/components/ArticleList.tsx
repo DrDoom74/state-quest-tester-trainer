@@ -46,6 +46,7 @@ const ArticleList: React.FC<ArticleListProps> = ({
           <Button 
             onClick={onCreateArticle} 
             disabled={!canCreateMore}
+            className="bg-gradient-to-r from-indigo-600 to-violet-500 hover:from-indigo-700 hover:to-violet-600"
           >
             <PlusIcon className="h-4 w-4 mr-1" />
             Создать статью
@@ -71,22 +72,23 @@ const ArticleList: React.FC<ArticleListProps> = ({
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles.map(article => (
-            <ArticleCard
-              key={article.id}
-              article={article}
-              userRole={userRole}
-              onEdit={onEditArticle}
-              onDelete={onDeleteArticle}
-              onSubmitForModeration={onSubmitForModeration}
-              onPublish={onPublish}
-              onUnpublish={onUnpublish}
-              onRepublish={onRepublish}
-              onReject={onReject}
-              onArchive={onArchive}
-              onView={onView}
-            />
+            <div key={article.id} className="h-full">
+              <ArticleCard
+                article={article}
+                userRole={userRole}
+                onEdit={onEditArticle}
+                onDelete={onDeleteArticle}
+                onSubmitForModeration={onSubmitForModeration}
+                onPublish={onPublish}
+                onUnpublish={onUnpublish}
+                onRepublish={onRepublish}
+                onReject={onReject}
+                onArchive={onArchive}
+                onView={onView}
+              />
+            </div>
           ))}
         </div>
       )}

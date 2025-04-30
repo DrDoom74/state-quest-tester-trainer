@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -52,7 +51,7 @@ const ACTION_RESULTS: Record<ActionType, (status: ArticleStatus) => ArticleStatu
 export const ARTICLE_VISIBILITY: Record<UserRole, ArticleStatus[]> = {
   user: ['draft', 'moderation', 'rejected', 'published', 'unpublished', 'archived'],
   moderator: ['moderation', 'rejected', 'published', 'unpublished'],
-  guest: ['published'],
+  guest: ['published', 'archived'], // Added archived to be visible for guest to trigger the bug
 };
 
 export function useArticles() {
@@ -157,7 +156,6 @@ export function useArticles() {
       if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
         // Always call checkActionForBug for the republish action
         checkActionForBug(article.status, action);
-        // Still perform the action (set the article state to published)
       }
       
       success = true;

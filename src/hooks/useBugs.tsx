@@ -5,6 +5,7 @@ import { toast } from "@/hooks/use-toast";
 
 const BUGS_STORAGE_KEY = 'qa-simulator-bugs';
 const BUGS_COUNT_KEY = 'qa-simulator-bugs-count';
+const TOAST_TIMEOUT = 10000; // Auto-dismiss toast after 10 seconds
 
 export const PREDEFINED_BUGS: { 
   id: string;
@@ -24,6 +25,12 @@ export const PREDEFINED_BUGS: {
     actionDescription: 'Попытка опубликовать снятую с публикации статью',
     conditionCheck: (fromStatus, action) => 
       fromStatus === 'unpublished' && action === 'republish'
+  },
+  {
+    id: 'archived-article-bug',
+    description: 'Баг обнаружен. Статья в статусе Архив доступна для просмотра другим пользователям.',
+    actionDescription: 'Просмотр статьи в статусе Архив',
+    conditionCheck: () => true // This is manually checked in the article view
   }
 ];
 
@@ -76,7 +83,8 @@ export function useBugs() {
       toast({
         title: "Поздравляем! Баг найден!",
         description,
-        variant: "destructive"
+        variant: "destructive",
+        duration: TOAST_TIMEOUT, // Auto-dismiss after 10 seconds
       });
       
       return true;

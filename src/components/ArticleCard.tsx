@@ -64,7 +64,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
   });
   
   return (
-    <div className="article-card group relative hover:shadow-md transition-shadow cursor-pointer" onClick={() => onView(article.id)}>
+    <div className="article-card group relative hover:shadow-md transition-shadow cursor-pointer bg-white rounded-lg shadow-sm p-4 h-full flex flex-col" onClick={() => onView(article.id)}>
       {/* Edit indicator for previously edited published articles */}
       {(article.status === 'published' || article.status === 'unpublished') && article.wasEdited && (
         <div className="absolute top-2 right-2 text-blue-500" title="Статья была отредактирована">
@@ -83,8 +83,8 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       </div>
       
       {/* Article content */}
-      <h3 className="article-card-title">{article.title}</h3>
-      <p className="article-card-content mt-1">{contentPreview}</p>
+      <h3 className="article-card-title font-semibold">{article.title}</h3>
+      <p className="article-card-content mt-1 text-gray-600 text-sm flex-grow">{contentPreview}</p>
       <div className="text-xs text-gray-500 mt-1">Категория: {article.category}</div>
       
       {/* Action buttons based on user role and article status */}
