@@ -93,11 +93,19 @@ export function useBugs() {
   }, [foundBugs]);
 
   const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {
-    for (const bug of PREDEFINED_BUGS) {
-      if (bug.conditionCheck(fromStatus, action) && !foundBugs.some(found => found.id === bug.id)) {
-        return checkForBug(bug.id, bug.description, bug.actionDescription);
-      }
+    // Find matching bug definition
+    const matchingBug = PREDEFINED_BUGS.find(bug => 
+      bug.conditionCheck(fromStatus, action) && !foundBugs.some(found => found.id === bug.id)
+    );
+    
+    if (matchingBug) {
+      return checkForBug(
+        matchingBug.id, 
+        matchingBug.description, 
+        matchingBug.actionDescription
+      );
     }
+    
     return false;
   }, [foundBugs, checkForBug]);
 
