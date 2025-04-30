@@ -153,10 +153,11 @@ export function useArticles() {
         return prev;
       }
       
-      // Check for bug when moderator tries to republish an unpublished article
+      // Always check for the republish bug, this is done before any state changes
       if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
-        // Always call checkActionForBug for the republish action
-        checkActionForBug(article.status, action);
+        setTimeout(() => {
+          checkActionForBug(article.status, action);
+        }, 0);
       }
       
       success = true;

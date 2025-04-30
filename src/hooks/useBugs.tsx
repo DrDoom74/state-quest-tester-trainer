@@ -80,12 +80,15 @@ export function useBugs() {
       setFoundBugs(prev => [...prev, newBug]);
       setBugsCount(prev => prev + 1);
       
-      toast({
-        title: "Поздравляем! Баг найден!",
-        description,
-        variant: "destructive",
-        duration: TOAST_TIMEOUT, // Auto-dismiss after 10 seconds
-      });
+      // Use setTimeout to avoid setState during render
+      setTimeout(() => {
+        toast({
+          title: "Поздравляем! Баг найден!",
+          description,
+          variant: "destructive",
+          duration: TOAST_TIMEOUT, // Auto-dismiss after 10 seconds
+        });
+      }, 0);
       
       return true;
     }

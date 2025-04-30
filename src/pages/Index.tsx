@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -63,13 +62,15 @@ const Index = () => {
   };
   
   const handleFormSubmit = (title: string, content: string, category: ArticleCategory) => {
-    // Check for bug with short title, but still create the article
+    // Check for bug with short title before doing anything else
     if (title.length < 5) {
-      checkForBug(
-        'short-title-bug', 
-        'Обнаружен баг! Заголовок статьи меньше 5 символов.', 
-        'Создание статьи с коротким заголовком'
-      );
+      setTimeout(() => {
+        checkForBug(
+          'short-title-bug', 
+          'Обнаружен баг! Заголовок статьи меньше 5 символов.', 
+          'Создание статьи с коротким заголовком'
+        );
+      }, 0);
     }
 
     if (editArticle) {

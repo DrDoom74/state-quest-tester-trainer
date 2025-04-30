@@ -77,6 +77,8 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       return;
     }
     
+    // Call the onSubmit even if the title is short
+    // The parent component will handle the bug detection
     onSubmit(title, content, category);
   };
   
