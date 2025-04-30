@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -155,7 +154,7 @@ export function useArticles() {
       
       // Check for bug when moderator tries to republish an unpublished article
       if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
-        // This will now correctly show the bug notification with the right message
+        // Always call checkActionForBug for the republish action
         checkActionForBug(article.status, action);
       }
       

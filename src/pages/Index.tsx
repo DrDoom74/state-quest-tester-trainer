@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -65,7 +64,6 @@ const Index = () => {
   const handleFormSubmit = (title: string, content: string, category: ArticleCategory) => {
     // Check for bug with short title, but still create the article
     if (title.length < 5) {
-      // Ensure the bug notification is shown with the correct message
       checkForBug(
         'short-title-bug', 
         'Обнаружен баг! Заголовок статьи меньше 5 символов.', 
@@ -249,85 +247,6 @@ const Index = () => {
       )}
     </div>
   );
-  
-  function handleCancelForm() {
-    setShowForm(false);
-    setEditArticle(undefined);
-  }
-  
-  function handleDeleteArticle(id: string) {
-    const success = performAction(id, 'delete');
-    if (success) {
-      toast({
-        title: "Статья удалена",
-        description: "Статья была удалена",
-      });
-    }
-  }
-  
-  function handleSubmitForModeration(id: string) {
-    const success = performAction(id, 'submitForModeration');
-    if (success) {
-      toast({
-        title: "Отправлено на модерацию",
-        description: "Статья отправлена на модерацию",
-      });
-    }
-  }
-  
-  function handlePublish(id: string) {
-    const success = performAction(id, 'publish');
-    if (success) {
-      toast({
-        title: "Статья опубликована",
-        description: "Статья успешно опубликована",
-      });
-    }
-  }
-  
-  function handleUnpublish(id: string) {
-    const success = performAction(id, 'unpublish');
-    if (success) {
-      toast({
-        title: "Статья снята с публикации",
-        description: "Статья снята с публикации",
-      });
-    }
-  }
-  
-  function handleRepublish(id: string) {
-    const success = performAction(id, 'republish');
-    if (success) {
-      toast({
-        title: "Статья опубликована",
-        description: "Статья повторно опубликована",
-      });
-    }
-  }
-  
-  function handleReject(id: string) {
-    const success = performAction(id, 'reject');
-    if (success) {
-      toast({
-        title: "Статья отклонена",
-        description: "Статья была отклонена модератором",
-      });
-    }
-  }
-  
-  function handleArchive(id: string) {
-    const success = performAction(id, 'archive');
-    if (success) {
-      toast({
-        title: "Статья в архиве",
-        description: "Статья перемещена в архив",
-      });
-    }
-  }
-  
-  function handleRoleChange(role: UserRole) {
-    setActiveRole(role);
-  }
 };
 
 export default Index;

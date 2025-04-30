@@ -80,7 +80,6 @@ export function useBugs() {
       setFoundBugs(prev => [...prev, newBug]);
       setBugsCount(prev => prev + 1);
       
-      // Always show toast notification when a bug is found
       toast({
         title: "Поздравляем! Баг найден!",
         description,
@@ -95,12 +94,8 @@ export function useBugs() {
 
   const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {
     for (const bug of PREDEFINED_BUGS) {
-      // Find the matching bug for this action/status combination
-      if (bug.conditionCheck(fromStatus, action)) {
-        // If bug hasn't been found yet, record it and show notification
-        if (!foundBugs.some(found => found.id === bug.id)) {
-          return checkForBug(bug.id, bug.description, bug.actionDescription);
-        }
+      if (bug.conditionCheck(fromStatus, action) && !foundBugs.some(found => found.id === bug.id)) {
+        return checkForBug(bug.id, bug.description, bug.actionDescription);
       }
     }
     return false;
