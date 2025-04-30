@@ -54,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({
                 variant="secondary" 
                 size="sm" 
                 className="bg-white/10 text-white border border-white/30 hover:bg-white hover:text-violet-600"
-                onClick={() => window.open('https://boosty.to/qa_klimenko', '_blank')}
+                onClick={() => window.open('https://boosty.to/aklimenko', '_blank')}
               >
                 <ExternalLinkIcon className="h-4 w-4 mr-1" />
                 Ответы

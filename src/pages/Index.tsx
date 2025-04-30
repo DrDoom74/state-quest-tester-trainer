@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -54,11 +55,10 @@ const Index = () => {
   };
   
   const handleFormSubmit = (title: string, content: string, category: ArticleCategory) => {
-    // Check for bug with short title
+    // Check for bug with short title, but still create the article
     if (title.length < 5) {
       const bugId = 'short-title-bug';
       checkForBug(bugId, 'Обнаружен баг! Заголовок статьи меньше 5 символов.', 'Создание статьи с коротким заголовком');
-      return;
     }
 
     if (editArticle) {
