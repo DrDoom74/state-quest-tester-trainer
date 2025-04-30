@@ -34,20 +34,20 @@ const Header: React.FC<HeaderProps> = ({
                 variant="outline" 
                 size="sm" 
                 onClick={onResetBugsClick}
-                className="text-white border-white hover:bg-white hover:text-primary"
+                className="text-white border-white hover:bg-white hover:text-primary flex items-center"
               >
                 <RefreshCwIcon className="h-4 w-4 mr-1" />
-                <span>Сбросить прогресс</span>
+                <span className="inline-block">Сбросить прогресс</span>
               </Button>
               
               <Button 
                 variant="outline" 
                 size="sm" 
                 onClick={onClearBlogClick}
-                className="text-white border-white hover:bg-white hover:text-primary"
+                className="text-white border-white hover:bg-white hover:text-primary flex items-center"
               >
                 <TrashIcon className="h-4 w-4 mr-1" />
-                <span>Очистить блог</span>
+                <span className="inline-block">Очистить блог</span>
               </Button>
             </div>
           </div>
