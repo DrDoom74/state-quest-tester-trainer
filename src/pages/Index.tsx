@@ -26,7 +26,7 @@ const Index = () => {
     canCreateMore 
   } = useArticles();
   
-  const { foundBugs, bugsCount, resetBugs } = useBugs();
+  const { foundBugs, bugsCount, resetBugs, checkForBug } = useBugs();
   
   const [showForm, setShowForm] = useState(false);
   const [editArticle, setEditArticle] = useState<Article | undefined>(undefined);
