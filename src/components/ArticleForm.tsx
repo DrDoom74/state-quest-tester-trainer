@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Article, ArticleCategory } from '@/types';
 import { Button } from "@/components/ui/button";
@@ -94,15 +93,11 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     // Check for "save without changes" bug
     if (isEditing && !hasChanges) {
       console.log("Detected save without changes bug!");
-      // Force this to run after the current render cycle
-      setTimeout(() => {
-        console.log("Checking for save without changes bug");
-        checkForBug(
-          'save-without-changes-bug',
-          'Обнаружен баг! Кнопка сохранить изменения доступна без внесенияя изменений в статью',
-          'Сохранение статьи без внесения изменений'
-        );
-      }, 50);
+      checkForBug(
+        'save-without-changes-bug',
+        'Обнаружен баг! Кнопка сохранить изменения доступна без внесенияя изменений в статью',
+        'Сохранение статьи без внесения изменений'
+      );
     }
     
     // Call the onSubmit even if the title is short

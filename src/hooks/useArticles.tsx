@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -153,10 +152,9 @@ export function useArticles() {
         return prev;
       }
       
-      // Check for the republish bug directly here, without setTimeout
+      // Check for the republish bug here - directly call checkActionForBug with current status and action
       if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
         console.log("Detected moderator republishing unpublished article - THIS IS A BUG!");
-        // This will only show one time per bug
         checkActionForBug(article.status, action);
       }
       

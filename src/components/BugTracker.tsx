@@ -18,7 +18,7 @@ const BugTracker: React.FC<BugTrackerProps> = ({ bugs }) => {
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <AlertTriangleIcon className="h-5 w-5 text-red-500" />
-          <h2 className="text-lg font-semibold">Найденные баги ({bugs.length}/5)</h2>
+          <h2 className="text-lg font-semibold">Найденные баги ({bugs.length}/4)</h2>
         </div>
         <Button 
           variant="ghost" 
