@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -57,7 +58,7 @@ export const ARTICLE_VISIBILITY: Record<UserRole, ArticleStatus[]> = {
 export function useArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [activeRole, setActiveRole] = useState<UserRole>('user');
-  const { checkActionForBug } = useBugs();
+  const { checkActionForBug, checkForBug } = useBugs();
 
   useEffect(() => {
     // Load articles from localStorage
@@ -153,13 +154,16 @@ export function useArticles() {
       }
       
       // Explicitly check for the republish bug, this is done before any state changes
-      // We use a separate condition to ensure this check is always performed
       if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
         console.log("Detected moderator republishing unpublished article - THIS IS A BUG!");
-        // Force this to run after the current render cycle
+        // Force this to run after the current render cycle with a delay
         setTimeout(() => {
-          console.log("Calling checkActionForBug for republish bug");
-          checkActionForBug(article.status, action);
+          console.log("Calling checkForBug for republish bug");
+          checkForBug(
+            'republish-unpublished-bug',
+            'Обнаружен баг! Модератор может опубликовывать снятую с публикации статью.',
+            'Попытка опубликовать снятую с публикации статью'
+          );
         }, 50);
       }
       
@@ -190,7 +194,7 @@ export function useArticles() {
     });
     
     return success;
-  }, [activeRole, checkActionForBug]);
+  }, [activeRole, checkForBug]);
 
   const clearAllArticles = useCallback(() => {
     setArticles([]);

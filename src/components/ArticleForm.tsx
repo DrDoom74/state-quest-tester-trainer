@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { toast } from "@/hooks/use-toast";
 import { XIcon } from 'lucide-react';
+import { useBugs } from '@/hooks/useBugs';
 
 interface ArticleFormProps {
   article?: Article;
@@ -38,8 +39,21 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   const [content, setContent] = useState(article?.content || '');
   const [category, setCategory] = useState<ArticleCategory>(article?.category || 'Technology');
   const [errors, setErrors] = useState({ title: '', content: '' });
+  const [hasChanges, setHasChanges] = useState(false);
+  const { checkForBug } = useBugs();
   
   const isEditing = !!article;
+  
+  // Track changes when editing an existing article
+  useEffect(() => {
+    if (isEditing) {
+      const titleChanged = title !== article.title;
+      const contentChanged = content !== article.content;
+      const categoryChanged = category !== article.category;
+      
+      setHasChanges(titleChanged || contentChanged || categoryChanged);
+    }
+  }, [title, content, category, article, isEditing]);
   
   const validate = () => {
     const newErrors = { title: '', content: '' };
@@ -75,6 +89,20 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         variant: "destructive",
       });
       return;
+    }
+    
+    // Check for "save without changes" bug
+    if (isEditing && !hasChanges) {
+      console.log("Detected save without changes bug!");
+      // Force this to run after the current render cycle
+      setTimeout(() => {
+        console.log("Checking for save without changes bug");
+        checkForBug(
+          'save-without-changes-bug',
+          'Обнаружен баг! Кнопка сохранить изменения доступна без внесенияя изменений в статью',
+          'Сохранение статьи без внесения изменений'
+        );
+      }, 50);
     }
     
     // Call the onSubmit even if the title is short

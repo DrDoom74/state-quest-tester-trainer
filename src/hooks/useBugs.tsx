@@ -31,6 +31,12 @@ export const PREDEFINED_BUGS: {
     description: 'Баг обнаружен. Статья в статусе Архив доступна для просмотра другим пользователям.',
     actionDescription: 'Просмотр статьи в статусе Архив',
     conditionCheck: () => true // This is manually checked in the article view
+  },
+  {
+    id: 'save-without-changes-bug',
+    description: 'Обнаружен баг! Кнопка сохранить изменения доступна без внесенияя изменений в статью',
+    actionDescription: 'Сохранение статьи без внесения изменений',
+    conditionCheck: () => true // This is manually checked in the form submission
   }
 ];
 
@@ -95,6 +101,16 @@ export function useBugs() {
       }, 0);
       
       return true;
+    } else {
+      // Bug already found, only show toast but don't increment counter
+      setTimeout(() => {
+        toast({
+          title: "Этот баг уже был найден",
+          description,
+          variant: "default",
+          duration: TOAST_TIMEOUT, // Auto-dismiss after 10 seconds
+        });
+      }, 0);
     }
     
     console.log(`Bug ${bugId} already found, not adding again`);
