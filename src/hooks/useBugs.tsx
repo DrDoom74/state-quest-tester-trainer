@@ -74,7 +74,7 @@ export function useBugs() {
   }, [foundBugs, bugsCount]);
 
   const checkForBug = useCallback((bugId: string, description: string, actionDescription: string): boolean => {
-    console.log(`Checking for bug: ${bugId}, already found bugs:`, foundBugs);
+    console.log(`Checking for bug: ${bugId}, already found bugs:`, foundBugs.map(b => b.id));
     
     // Check if this bug has already been found
     if (!foundBugs.some(found => found.id === bugId)) {
@@ -90,15 +90,13 @@ export function useBugs() {
       setFoundBugs(prev => [...prev, newBug]);
       setBugsCount(prev => prev + 1);
       
-      // Use setTimeout to avoid setState during render
-      setTimeout(() => {
-        toast({
-          title: "Поздравляем! Баг найден!",
-          description,
-          variant: "destructive",
-          duration: TOAST_TIMEOUT, // Auto-dismiss after 10 seconds
-        });
-      }, 0);
+      // Show toast notification
+      toast({
+        title: "Поздравляем! Баг найден!",
+        description,
+        variant: "destructive",
+        duration: TOAST_TIMEOUT,
+      });
       
       return true;
     } else {

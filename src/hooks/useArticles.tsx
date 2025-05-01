@@ -1,3 +1,4 @@
+
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -57,7 +58,7 @@ export const ARTICLE_VISIBILITY: Record<UserRole, ArticleStatus[]> = {
 export function useArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [activeRole, setActiveRole] = useState<UserRole>('user');
-  const { checkActionForBug, checkForBug } = useBugs();
+  const { checkActionForBug } = useBugs();
 
   useEffect(() => {
     // Load articles from localStorage
@@ -152,9 +153,10 @@ export function useArticles() {
         return prev;
       }
       
-      // Check for the republish bug here - directly call checkActionForBug with current status and action
+      // Check for the republish bug here - explicitly check the condition
       if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
         console.log("Detected moderator republishing unpublished article - THIS IS A BUG!");
+        // This will call checkForBug with the correct parameters and only once per bug id
         checkActionForBug(article.status, action);
       }
       
