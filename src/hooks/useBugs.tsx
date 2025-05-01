@@ -102,19 +102,9 @@ export function useBugs() {
       
       return true;
     } else {
-      // Bug already found, only show toast but don't increment counter
-      setTimeout(() => {
-        toast({
-          title: "Этот баг уже был найден",
-          description,
-          variant: "default",
-          duration: TOAST_TIMEOUT, // Auto-dismiss after 10 seconds
-        });
-      }, 0);
+      console.log(`Bug ${bugId} already found, not adding again`);
+      return false;
     }
-    
-    console.log(`Bug ${bugId} already found, not adding again`);
-    return false;
   }, [foundBugs]);
 
   const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {

@@ -153,18 +153,11 @@ export function useArticles() {
         return prev;
       }
       
-      // Explicitly check for the republish bug, this is done before any state changes
+      // Check for the republish bug directly here, without setTimeout
       if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
         console.log("Detected moderator republishing unpublished article - THIS IS A BUG!");
-        // Force this to run after the current render cycle with a delay
-        setTimeout(() => {
-          console.log("Calling checkForBug for republish bug");
-          checkForBug(
-            'republish-unpublished-bug',
-            'Обнаружен баг! Модератор может опубликовывать снятую с публикации статью.',
-            'Попытка опубликовать снятую с публикации статью'
-          );
-        }, 50);
+        // This will only show one time per bug
+        checkActionForBug(article.status, action);
       }
       
       success = true;
@@ -194,7 +187,7 @@ export function useArticles() {
     });
     
     return success;
-  }, [activeRole, checkForBug]);
+  }, [activeRole, checkActionForBug]);
 
   const clearAllArticles = useCallback(() => {
     setArticles([]);
