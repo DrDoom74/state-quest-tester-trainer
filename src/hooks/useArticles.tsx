@@ -153,10 +153,10 @@ export function useArticles() {
         return prev;
       }
       
-      // Check for the republish bug here - explicitly check the condition
+      // Check for specific bug conditions
       if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
         console.log("Detected moderator republishing unpublished article - THIS IS A BUG!");
-        // This will call checkForBug with the correct parameters and only once per bug id
+        // Call checkActionForBug with correct status and action
         checkActionForBug(article.status, action);
       }
       

@@ -44,8 +44,8 @@ export function useBugs() {
   const [foundBugs, setFoundBugs] = useState<Bug[]>([]);
   const [bugsCount, setBugsCount] = useState(0);
 
+  // Load saved bugs on initial mount
   useEffect(() => {
-    // Load bugs from localStorage
     const savedBugs = localStorage.getItem(BUGS_STORAGE_KEY);
     const savedCount = localStorage.getItem(BUGS_COUNT_KEY);
     
@@ -67,12 +67,13 @@ export function useBugs() {
     }
   }, []);
 
+  // Save bugs whenever they change
   useEffect(() => {
-    // Save bugs to localStorage whenever they change
     localStorage.setItem(BUGS_STORAGE_KEY, JSON.stringify(foundBugs));
     localStorage.setItem(BUGS_COUNT_KEY, bugsCount.toString());
   }, [foundBugs, bugsCount]);
 
+  // Core function to register a bug
   const checkForBug = useCallback((bugId: string, description: string, actionDescription: string): boolean => {
     console.log(`Checking for bug: ${bugId}, already found bugs:`, foundBugs.map(b => b.id));
     
@@ -80,6 +81,7 @@ export function useBugs() {
     if (!foundBugs.some(found => found.id === bugId)) {
       console.log(`Bug ${bugId} not found yet, adding to found bugs`);
       
+      // Create new bug object
       const newBug: Bug = {
         id: bugId,
         description,
@@ -87,8 +89,9 @@ export function useBugs() {
         dateFound: new Date()
       };
       
-      setFoundBugs(prev => [...prev, newBug]);
-      setBugsCount(prev => prev + 1);
+      // Update state with new bug
+      setFoundBugs(prevBugs => [...prevBugs, newBug]);
+      setBugsCount(prevCount => prevCount + 1);
       
       // Show toast notification
       toast({
@@ -105,13 +108,16 @@ export function useBugs() {
     }
   }, [foundBugs]);
 
+  // Function to check action-based bugs
   const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {
     console.log(`Checking action for bug: status=${fromStatus}, action=${action}`);
     
     // Find matching bug definition
-    const matchingBug = PREDEFINED_BUGS.find(bug => 
-      bug.conditionCheck(fromStatus, action) && !foundBugs.some(found => found.id === bug.id)
-    );
+    const matchingBug = PREDEFINED_BUGS.find(bug => {
+      const matches = bug.conditionCheck(fromStatus, action);
+      const alreadyFound = foundBugs.some(found => found.id === bug.id);
+      return matches && !alreadyFound;
+    });
     
     if (matchingBug) {
       console.log(`Found matching bug: ${matchingBug.id}`);
