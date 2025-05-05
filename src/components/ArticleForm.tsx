@@ -32,12 +32,19 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [bugDetected, setBugDetected] = useState(false);
+  const [bugProcessed, setBugProcessed] = useState(false);
   
   const {
-    checkForBug
+    checkForBug,
+    foundBugs
   } = useBugs();
   
   const isEditing = !!article;
+
+  // Log foundBugs whenever it changes
+  useEffect(() => {
+    console.log("Current foundBugs in ArticleForm:", foundBugs);
+  }, [foundBugs]);
 
   // Track changes when editing an existing article
   useEffect(() => {
@@ -76,24 +83,37 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     return isValid;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Separate function for bug detection
+  const detectBug = async () => {
+    if (isEditing && !hasChanges && !bugProcessed) {
+      console.log("Detected save without changes bug!");
+      setBugProcessed(true);
+      
+      // Process the bug detection
+      const bugFound = await new Promise<boolean>(resolve => {
+        setTimeout(() => {
+          const result = checkForBug(
+            'save-without-changes-bug',
+            'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
+            'Сохранение статьи без внесения изменений'
+          );
+          console.log("Bug detection result:", result);
+          setBugDetected(true);
+          resolve(result);
+        }, 0);
+      });
+      
+      console.log("Bug found:", bugFound);
+      return bugFound;
+    }
+    return false;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check for "save without changes" bug before doing anything else
-    if (isEditing && !hasChanges && !bugDetected) {
-      console.log("Detected save without changes bug!");
-      // Important: Set bugDetected to true to prevent multiple detections
-      setBugDetected(true);
-      
-      // Use setTimeout to ensure this runs after current execution
-      setTimeout(() => {
-        checkForBug(
-          'save-without-changes-bug',
-          'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
-          'Сохранение статьи без внесения изменений'
-        );
-      }, 0);
-    }
+    // Check for "save without changes" bug before validation
+    await detectBug();
     
     if (!validate()) {
       toast({

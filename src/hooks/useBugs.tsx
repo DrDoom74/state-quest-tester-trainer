@@ -28,7 +28,7 @@ export const PREDEFINED_BUGS: {
   },
   {
     id: 'save-without-changes-bug',
-    description: 'Обнаружен баг! Кнопка сохранить изменения доступна без внесенияя изменений в статью',
+    description: 'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
     actionDescription: 'Сохранение статьи без внесения изменений',
     conditionCheck: () => true // This is manually checked in the form submission
   }
@@ -63,8 +63,11 @@ export function useBugs() {
 
   // Save bugs whenever they change
   useEffect(() => {
-    localStorage.setItem(BUGS_STORAGE_KEY, JSON.stringify(foundBugs));
-    localStorage.setItem(BUGS_COUNT_KEY, bugsCount.toString());
+    if (foundBugs.length > 0) {
+      console.log("Saving bugs to localStorage:", foundBugs);
+      localStorage.setItem(BUGS_STORAGE_KEY, JSON.stringify(foundBugs));
+      localStorage.setItem(BUGS_COUNT_KEY, bugsCount.toString());
+    }
   }, [foundBugs, bugsCount]);
 
   // Core function to register a bug - ensuring it's properly synchronized
@@ -83,13 +86,14 @@ export function useBugs() {
         dateFound: new Date()
       };
       
-      // Update state with new bug - force a state update by creating a new array
+      // Update state with new bug using functional update to ensure we're working with latest state
       setFoundBugs(prevBugs => {
         const updatedBugs = [...prevBugs, newBug];
-        console.log("Updated bugs:", updatedBugs);
+        console.log("Updated bugs array:", updatedBugs);
         return updatedBugs;
       });
       
+      // Update bug count with functional update
       setBugsCount(prevCount => {
         const newCount = prevCount + 1;
         console.log("Updated bug count:", newCount);
@@ -103,6 +107,15 @@ export function useBugs() {
         variant: "destructive",
         duration: TOAST_TIMEOUT,
       });
+      
+      // Force immediate localStorage update for this critical data
+      setTimeout(() => {
+        const currentBugs = JSON.parse(localStorage.getItem(BUGS_STORAGE_KEY) || '[]');
+        const updatedBugs = [...currentBugs, newBug];
+        localStorage.setItem(BUGS_STORAGE_KEY, JSON.stringify(updatedBugs));
+        localStorage.setItem(BUGS_COUNT_KEY, (currentBugs.length + 1).toString());
+        console.log("Forced localStorage update for bug:", bugId);
+      }, 0);
       
       return true;
     } else {
