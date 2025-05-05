@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Article, ArticleCategory } from '@/types';
 import { Button } from "@/components/ui/button";
@@ -90,14 +91,18 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       return;
     }
     
-    // Check for "save without changes" bug
+    // Check for "save without changes" bug - IMPORTANT: Move this check before onSubmit call
     if (isEditing && !hasChanges) {
       console.log("Detected save without changes bug!");
-      checkForBug(
+      const bugFound = checkForBug(
         'save-without-changes-bug',
         'Обнаружен баг! Кнопка сохранить изменения доступна без внесенияя изменений в статью',
         'Сохранение статьи без внесения изменений'
       );
+      
+      // If bug already found or not, we still need to call onSubmit to maintain functionality
+      onSubmit(title, content, category);
+      return;
     }
     
     // Call the onSubmit even if the title is short
