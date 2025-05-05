@@ -19,13 +19,7 @@ export const PREDEFINED_BUGS: {
     actionDescription: 'Создание статьи с коротким заголовком',
     conditionCheck: () => true // This is manually checked in the form submission
   },
-  {
-    id: 'republish-unpublished-bug',
-    description: 'Обнаружен баг! Модератор может опубликовывать снятую с публикации статью.',
-    actionDescription: 'Попытка опубликовать снятую с публикации статью',
-    conditionCheck: (fromStatus, action) => 
-      fromStatus === 'unpublished' && action === 'republish'
-  },
+  // Removed the republish-unpublished-bug
   {
     id: 'archived-article-bug',
     description: 'Баг обнаружен. Статья в статусе Архив доступна для просмотра другим пользователям.',

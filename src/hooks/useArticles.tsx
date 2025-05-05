@@ -23,7 +23,7 @@ const VALID_TRANSITIONS: Record<UserRole, Record<ArticleStatus, ActionType[]>> =
     moderation: ['publish', 'reject'],
     rejected: [],
     published: ['unpublish'],
-    unpublished: ['republish'], // Added republish action for bug detection
+    unpublished: [], // Removed republish action
     archived: [],
   },
   guest: {
@@ -153,12 +153,7 @@ export function useArticles() {
         return prev;
       }
       
-      // Check for specific bug conditions
-      if (activeRole === 'moderator' && article.status === 'unpublished' && action === 'republish') {
-        console.log("Detected moderator republishing unpublished article - THIS IS A BUG!");
-        // Call checkActionForBug with correct status and action
-        checkActionForBug(article.status, action);
-      }
+      // Removed the bug check for republish action
       
       success = true;
       
@@ -187,7 +182,7 @@ export function useArticles() {
     });
     
     return success;
-  }, [activeRole, checkActionForBug]);
+  }, [activeRole]);
 
   const clearAllArticles = useCallback(() => {
     setArticles([]);

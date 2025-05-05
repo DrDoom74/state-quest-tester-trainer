@@ -179,13 +179,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
               </Button>
             )}
             
-            {/* Unpublished actions for moderator */}
-            {article.status === 'unpublished' && (
-              <Button size="sm" variant="outline" className="bg-green-100" onClick={() => onRepublish(article.id)}>
-                <EyeIcon className="h-3.5 w-3.5 mr-1" />
-                Опубликовать
-              </Button>
-            )}
+            {/* Removed the republish button for unpublished articles */}
           </>
         )}
         

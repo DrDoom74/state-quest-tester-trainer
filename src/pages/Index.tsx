@@ -12,7 +12,7 @@ import { useBugs } from '@/hooks/useBugs';
 import { Article, ArticleCategory, UserRole } from '@/types';
 import { toast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { UserIcon, ShieldIcon, EyeIcon } from 'lucide-react';
+import RoleSelector from '@/components/RoleSelector';
 
 const Index = () => {
   const { 
@@ -198,22 +198,7 @@ const Index = () => {
           </TabsList>
           <TabsContent value="articles">
             <div className="mb-4">
-              <Tabs defaultValue="user" onValueChange={(value) => handleRoleChange(value as UserRole)}>
-                <TabsList className="mb-4">
-                  <TabsTrigger value="user">
-                    <UserIcon className="h-4 w-4 mr-2" />
-                    Пользователь 1
-                  </TabsTrigger>
-                  <TabsTrigger value="moderator">
-                    <ShieldIcon className="h-4 w-4 mr-2" />
-                    Модератор
-                  </TabsTrigger>
-                  <TabsTrigger value="guest">
-                    <EyeIcon className="h-4 w-4 mr-2" />
-                    Гость
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
+              <RoleSelector activeRole={activeRole} onRoleChange={handleRoleChange} />
             </div>
             <ArticleList 
               articles={visibleArticles}
