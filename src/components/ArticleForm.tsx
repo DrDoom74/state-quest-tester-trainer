@@ -32,13 +32,9 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [bugDetectionDone, setBugDetectionDone] = useState(false);
   const initialRender = useRef(true);
   
-  const {
-    checkForBug,
-    foundBugs
-  } = useBugs();
+  const { checkForBug } = useBugs();
   
   const isEditing = !!article;
 
@@ -83,28 +79,21 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     return isValid;
   };
 
-  // Detect bug with a separate function that returns a promise
-  const detectBug = async (): Promise<boolean> => {
+  // Detect bug with improved synchronization
+  const detectBug = () => {
     if (isEditing && !hasChanges) {
       console.log("Detecting save without changes bug!");
-      
-      // Use a promise to ensure we can await the bug detection
-      return new Promise<boolean>(resolve => {
-        const bugResult = checkForBug(
-          'save-without-changes-bug',
-          'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
-          'Сохранение статьи без внесения изменений'
-        );
-        
-        console.log("Bug detection result:", bugResult);
-        setBugDetectionDone(true);
-        resolve(bugResult);
-      });
+      // Вызываем checkForBug напрямую без Promise
+      return checkForBug(
+        'save-without-changes-bug',
+        'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
+        'Сохранение статьи без внесения изменений'
+      );
     }
-    return Promise.resolve(false);
+    return false;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     // Prevent multiple submissions
@@ -113,7 +102,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     
     try {
       // First detect any bugs
-      const bugDetected = await detectBug();
+      const bugDetected = detectBug();
       console.log("Bug detected:", bugDetected);
       
       if (!validate()) {
@@ -122,6 +111,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
           description: "Пожалуйста, исправьте ошибки в форме",
           variant: "destructive"
         });
+        setIsSubmitting(false);
         return;
       }
       
@@ -134,7 +124,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         description: "Произошла ошибка при сохранении статьи",
         variant: "destructive"
       });
-    } finally {
       setIsSubmitting(false);
     }
   };

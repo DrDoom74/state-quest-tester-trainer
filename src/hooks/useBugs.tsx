@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, createContext, useContext, ReactNode } from 'react';
 import { Bug } from '@/types';
 import { toast } from "@/hooks/use-toast";
 
@@ -34,11 +34,42 @@ export const PREDEFINED_BUGS: {
   }
 ];
 
-export function useBugs() {
+// Создаем контекст для багов
+interface BugsContextType {
+  foundBugs: Bug[];
+  bugsCount: number;
+  checkForBug: (bugId: string, description: string, actionDescription: string) => boolean;
+  checkActionForBug: (fromStatus: string, action: string) => boolean;
+  resetBugs: () => void;
+}
+
+const BugsContext = createContext<BugsContextType | null>(null);
+
+// Создаем провайдер для контекста
+export const BugsProvider = ({ children }: { children: ReactNode }) => {
+  const bugsState = useBugsState();
+  return (
+    <BugsContext.Provider value={bugsState}>
+      {children}
+    </BugsContext.Provider>
+  );
+};
+
+// Хук для использования контекста багов
+export const useBugs = () => {
+  const context = useContext(BugsContext);
+  if (!context) {
+    throw new Error('useBugs must be used within a BugsProvider');
+  }
+  return context;
+};
+
+// Основная логика работы с багами
+function useBugsState() {
   const [foundBugs, setFoundBugs] = useState<Bug[]>([]);
   const [bugsCount, setBugsCount] = useState(0);
 
-  // Load saved bugs on initial mount
+  // Загружаем сохраненные баги при инициализации
   useEffect(() => {
     const loadSavedBugs = () => {
       const savedBugs = localStorage.getItem(BUGS_STORAGE_KEY);
@@ -65,15 +96,15 @@ export function useBugs() {
     loadSavedBugs();
   }, []);
 
-  // Core function to register a bug - ensuring it's properly synchronized
+  // Основная функция для регистрации бага с правильной синхронизацией
   const checkForBug = useCallback((bugId: string, description: string, actionDescription: string): boolean => {
     console.log(`Checking for bug: ${bugId}, already found bugs:`, foundBugs.map(b => b.id));
     
-    // Check if this bug has already been found
+    // Проверяем, был ли баг уже найден
     if (!foundBugs.some(found => found.id === bugId)) {
       console.log(`Bug ${bugId} not found yet, adding to found bugs`);
       
-      // Create new bug object
+      // Создаем новый объект бага
       const newBug: Bug = {
         id: bugId,
         description,
@@ -81,26 +112,26 @@ export function useBugs() {
         dateFound: new Date()
       };
       
-      // Update state with new bug using functional update to ensure we're working with latest state
+      // Обновляем состояние с новым багом, используя функциональное обновление
       setFoundBugs(prevBugs => {
         const updatedBugs = [...prevBugs, newBug];
         console.log("Updated bugs array:", updatedBugs);
         
-        // Synchronously update localStorage for immediate persistence
+        // Синхронно обновляем localStorage для немедленного сохранения
         localStorage.setItem(BUGS_STORAGE_KEY, JSON.stringify(updatedBugs));
         return updatedBugs;
       });
       
-      // Update bug count with functional update
+      // Обновляем счетчик багов с функциональным обновлением
       setBugsCount(prevCount => {
         const newCount = prevCount + 1;
         console.log("Updated bug count:", newCount);
-        // Synchronously update localStorage for immediate persistence
+        // Синхронно обновляем localStorage для немедленного сохранения
         localStorage.setItem(BUGS_COUNT_KEY, newCount.toString());
         return newCount;
       });
       
-      // Show toast notification
+      // Показываем уведомление toast
       toast({
         title: "Поздравляем! Баг найден!",
         description,
@@ -115,11 +146,11 @@ export function useBugs() {
     }
   }, [foundBugs]);
 
-  // Function to check action-based bugs
+  // Функция для проверки багов на основе действий
   const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {
     console.log(`Checking action for bug: status=${fromStatus}, action=${action}`);
     
-    // Find matching bug definition
+    // Ищем подходящий баг
     const matchingBug = PREDEFINED_BUGS.find(bug => {
       const matches = bug.conditionCheck(fromStatus, action);
       const alreadyFound = foundBugs.some(found => found.id === bug.id);
