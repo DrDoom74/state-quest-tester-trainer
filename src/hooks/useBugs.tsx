@@ -67,7 +67,7 @@ export function useBugs() {
     localStorage.setItem(BUGS_COUNT_KEY, bugsCount.toString());
   }, [foundBugs, bugsCount]);
 
-  // Core function to register a bug
+  // Core function to register a bug - ensuring it's properly synchronized
   const checkForBug = useCallback((bugId: string, description: string, actionDescription: string): boolean => {
     console.log(`Checking for bug: ${bugId}, already found bugs:`, foundBugs.map(b => b.id));
     
@@ -83,9 +83,18 @@ export function useBugs() {
         dateFound: new Date()
       };
       
-      // Update state with new bug
-      setFoundBugs(prevBugs => [...prevBugs, newBug]);
-      setBugsCount(prevCount => prevCount + 1);
+      // Update state with new bug - force a state update by creating a new array
+      setFoundBugs(prevBugs => {
+        const updatedBugs = [...prevBugs, newBug];
+        console.log("Updated bugs:", updatedBugs);
+        return updatedBugs;
+      });
+      
+      setBugsCount(prevCount => {
+        const newCount = prevCount + 1;
+        console.log("Updated bug count:", newCount);
+        return newCount;
+      });
       
       // Show toast notification
       toast({

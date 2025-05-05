@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Article, ArticleCategory } from '@/types';
 import { Button } from "@/components/ui/button";
@@ -8,12 +9,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/hooks/use-toast";
 import { XIcon } from 'lucide-react';
 import { useBugs } from '@/hooks/useBugs';
+
 interface ArticleFormProps {
   article?: Article;
   onSubmit: (title: string, content: string, category: ArticleCategory) => void;
   onCancel: () => void;
 }
+
 const CATEGORIES: ArticleCategory[] = ['Technology', 'Science', 'Health', 'Business', 'Entertainment'];
+
 const ArticleForm: React.FC<ArticleFormProps> = ({
   article,
   onSubmit,
@@ -27,9 +31,12 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     content: ''
   });
   const [hasChanges, setHasChanges] = useState(false);
+  const [bugDetected, setBugDetected] = useState(false);
+  
   const {
     checkForBug
   } = useBugs();
+  
   const isEditing = !!article;
 
   // Track changes when editing an existing article
@@ -41,12 +48,14 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       setHasChanges(titleChanged || contentChanged || categoryChanged);
     }
   }, [title, content, category, article, isEditing]);
+
   const validate = () => {
     const newErrors = {
       title: '',
       content: ''
     };
     let isValid = true;
+    
     if (!title.trim()) {
       newErrors.title = 'Заголовок обязателен';
       isValid = false;
@@ -54,6 +63,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       newErrors.title = 'Заголовок не должен превышать 100 символов';
       isValid = false;
     }
+    
     if (!content.trim()) {
       newErrors.content = 'Текст статьи обязателен';
       isValid = false;
@@ -61,18 +71,30 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       newErrors.content = 'Текст статьи должен содержать не менее 20 символов';
       isValid = false;
     }
+    
     setErrors(newErrors);
     return isValid;
   };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Всегда проверять наличие бага "save without changes" перед валидацией
-    // Это гарантирует, что мы поймаем баг до любых других проверок
-    if (isEditing && !hasChanges) {
+    // Check for "save without changes" bug before doing anything else
+    if (isEditing && !hasChanges && !bugDetected) {
       console.log("Detected save without changes bug!");
-      checkForBug('save-without-changes-bug', 'Обнаружен баг! Кнопка сохранить изменения доступна без внесенияя изменений в статью', 'Сохранение статьи без внесения изменений');
+      // Important: Set bugDetected to true to prevent multiple detections
+      setBugDetected(true);
+      
+      // Use setTimeout to ensure this runs after current execution
+      setTimeout(() => {
+        checkForBug(
+          'save-without-changes-bug',
+          'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
+          'Сохранение статьи без внесения изменений'
+        );
+      }, 0);
     }
+    
     if (!validate()) {
       toast({
         title: "Ошибка валидации",
@@ -82,9 +104,10 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       return;
     }
 
-    // Вызываем onSubmit в любом случае, чтобы сохранить функциональность приложения
+    // Call onSubmit to save the article
     onSubmit(title, content, category);
   };
+
   return <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
@@ -141,4 +164,5 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       </div>
     </div>;
 };
+
 export default ArticleForm;
