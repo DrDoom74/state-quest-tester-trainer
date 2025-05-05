@@ -82,6 +82,17 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
+    // Всегда проверять наличие бага "save without changes" перед валидацией
+    // Это гарантирует, что мы поймаем баг до любых других проверок
+    if (isEditing && !hasChanges) {
+      console.log("Detected save without changes bug!");
+      checkForBug(
+        'save-without-changes-bug',
+        'Обнаружен баг! Кнопка сохранить изменения доступна без внесенияя изменений в статью',
+        'Сохранение статьи без внесения изменений'
+      );
+    }
+    
     if (!validate()) {
       toast({
         title: "Ошибка валидации",
@@ -91,22 +102,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       return;
     }
     
-    // Check for "save without changes" bug - IMPORTANT: Move this check before onSubmit call
-    if (isEditing && !hasChanges) {
-      console.log("Detected save without changes bug!");
-      const bugFound = checkForBug(
-        'save-without-changes-bug',
-        'Обнаружен баг! Кнопка сохранить изменения доступна без внесенияя изменений в статью',
-        'Сохранение статьи без внесения изменений'
-      );
-      
-      // If bug already found or not, we still need to call onSubmit to maintain functionality
-      onSubmit(title, content, category);
-      return;
-    }
-    
-    // Call the onSubmit even if the title is short
-    // The parent component will handle the bug detection
+    // Вызываем onSubmit в любом случае, чтобы сохранить функциональность приложения
     onSubmit(title, content, category);
   };
   
