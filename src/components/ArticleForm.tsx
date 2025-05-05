@@ -79,16 +79,33 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     return isValid;
   };
 
-  // Detect bug with improved synchronization
+  // Улучшенное определение бага с выделением в отдельную переменную
   const detectBug = () => {
     if (isEditing && !hasChanges) {
       console.log("Detecting save without changes bug!");
-      // Вызываем checkForBug напрямую без Promise
-      return checkForBug(
-        'save-without-changes-bug',
-        'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
-        'Сохранение статьи без внесения изменений'
-      );
+      
+      // Вызываем checkForBug с небольшой задержкой, чтобы гарантировать корректное отображение toast
+      setTimeout(() => {
+        const bugDetected = checkForBug(
+          'save-without-changes-bug',
+          'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
+          'Сохранение статьи без внесения изменений'
+        );
+        
+        console.log("Bug detection result:", bugDetected);
+        
+        // Использование прямого вызова toast для усиления эффекта
+        if (bugDetected) {
+          toast({
+            title: "Поздравляем! Баг найден!",
+            description: 'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
+            variant: "destructive",
+            duration: 10000,
+          });
+        }
+      }, 10);
+      
+      return true;
     }
     return false;
   };

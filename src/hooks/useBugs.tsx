@@ -96,7 +96,7 @@ function useBugsState() {
     loadSavedBugs();
   }, []);
 
-  // Основная функция для регистрации бага с правильной синхронизацией
+  // Основная функция для регистрации бага с правильной синхронизацией и отображением тоста
   const checkForBug = useCallback((bugId: string, description: string, actionDescription: string): boolean => {
     console.log(`Checking for bug: ${bugId}, already found bugs:`, foundBugs.map(b => b.id));
     
@@ -131,13 +131,16 @@ function useBugsState() {
         return newCount;
       });
       
-      // Показываем уведомление toast
-      toast({
-        title: "Поздравляем! Баг найден!",
-        description,
-        variant: "destructive", 
-        duration: TOAST_TIMEOUT,
-      });
+      // Показываем уведомление toast вне setState чтобы избежать проблем с рендерингом
+      // Добавляем небольшую задержку для гарантии запуска после обновления состояния
+      setTimeout(() => {
+        toast({
+          title: "Поздравляем! Баг найден!",
+          description,
+          variant: "destructive", 
+          duration: TOAST_TIMEOUT,
+        });
+      }, 10);
       
       return true;
     } else {
