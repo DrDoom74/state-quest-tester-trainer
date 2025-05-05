@@ -40,25 +40,29 @@ export function useBugs() {
 
   // Load saved bugs on initial mount
   useEffect(() => {
-    const savedBugs = localStorage.getItem(BUGS_STORAGE_KEY);
-    const savedCount = localStorage.getItem(BUGS_COUNT_KEY);
-    
-    if (savedBugs) {
-      try {
-        const parsedBugs = JSON.parse(savedBugs);
-        // Convert dates back to Date objects
-        parsedBugs.forEach((bug: any) => {
-          bug.dateFound = new Date(bug.dateFound);
-        });
-        setFoundBugs(parsedBugs);
-      } catch (error) {
-        console.error('Failed to parse saved bugs', error);
+    const loadSavedBugs = () => {
+      const savedBugs = localStorage.getItem(BUGS_STORAGE_KEY);
+      const savedCount = localStorage.getItem(BUGS_COUNT_KEY);
+      
+      if (savedBugs) {
+        try {
+          const parsedBugs = JSON.parse(savedBugs);
+          // Convert dates back to Date objects
+          parsedBugs.forEach((bug: any) => {
+            bug.dateFound = new Date(bug.dateFound);
+          });
+          setFoundBugs(parsedBugs);
+        } catch (error) {
+          console.error('Failed to parse saved bugs', error);
+        }
       }
-    }
-    
-    if (savedCount) {
-      setBugsCount(parseInt(savedCount, 10));
-    }
+      
+      if (savedCount) {
+        setBugsCount(parseInt(savedCount, 10));
+      }
+    };
+
+    loadSavedBugs();
   }, []);
 
   // Save bugs whenever they change
@@ -90,6 +94,9 @@ export function useBugs() {
       setFoundBugs(prevBugs => {
         const updatedBugs = [...prevBugs, newBug];
         console.log("Updated bugs array:", updatedBugs);
+        
+        // Synchronously update localStorage for immediate persistence
+        localStorage.setItem(BUGS_STORAGE_KEY, JSON.stringify(updatedBugs));
         return updatedBugs;
       });
       
@@ -97,6 +104,8 @@ export function useBugs() {
       setBugsCount(prevCount => {
         const newCount = prevCount + 1;
         console.log("Updated bug count:", newCount);
+        // Synchronously update localStorage for immediate persistence
+        localStorage.setItem(BUGS_COUNT_KEY, newCount.toString());
         return newCount;
       });
       
@@ -104,18 +113,9 @@ export function useBugs() {
       toast({
         title: "Поздравляем! Баг найден!",
         description,
-        variant: "destructive",
+        variant: "destructive", 
         duration: TOAST_TIMEOUT,
       });
-      
-      // Force immediate localStorage update for this critical data
-      setTimeout(() => {
-        const currentBugs = JSON.parse(localStorage.getItem(BUGS_STORAGE_KEY) || '[]');
-        const updatedBugs = [...currentBugs, newBug];
-        localStorage.setItem(BUGS_STORAGE_KEY, JSON.stringify(updatedBugs));
-        localStorage.setItem(BUGS_COUNT_KEY, (currentBugs.length + 1).toString());
-        console.log("Forced localStorage update for bug:", bugId);
-      }, 0);
       
       return true;
     } else {

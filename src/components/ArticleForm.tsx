@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Article, ArticleCategory } from '@/types';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,8 +31,8 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     content: ''
   });
   const [hasChanges, setHasChanges] = useState(false);
-  const [bugDetected, setBugDetected] = useState(false);
-  const [bugProcessed, setBugProcessed] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const initialRender = useRef(true);
   
   const {
     checkForBug,
@@ -48,11 +48,15 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
 
   // Track changes when editing an existing article
   useEffect(() => {
-    if (isEditing) {
+    if (isEditing && !initialRender.current) {
       const titleChanged = title !== article.title;
       const contentChanged = content !== article.content;
       const categoryChanged = category !== article.category;
       setHasChanges(titleChanged || contentChanged || categoryChanged);
+    }
+    // After the first render, set initialRender to false
+    if (initialRender.current) {
+      initialRender.current = false;
     }
   }, [title, content, category, article, isEditing]);
 
@@ -83,14 +87,14 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     return isValid;
   };
 
-  // Separate function for bug detection
+  // Separate function for bug detection with consistent state handling
   const detectBug = async () => {
-    if (isEditing && !hasChanges && !bugProcessed) {
-      console.log("Detected save without changes bug!");
-      setBugProcessed(true);
+    if (isEditing && !hasChanges) {
+      console.log("Detecting save without changes bug!");
       
-      // Process the bug detection
-      const bugFound = await new Promise<boolean>(resolve => {
+      // Process the bug detection with a clear promise chain
+      return new Promise<boolean>((resolve) => {
+        // Add a minimal delay to ensure state updates have processed
         setTimeout(() => {
           const result = checkForBug(
             'save-without-changes-bug',
@@ -98,34 +102,39 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             'Сохранение статьи без внесения изменений'
           );
           console.log("Bug detection result:", result);
-          setBugDetected(true);
           resolve(result);
         }, 0);
       });
-      
-      console.log("Bug found:", bugFound);
-      return bugFound;
     }
-    return false;
+    return Promise.resolve(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Check for "save without changes" bug before validation
-    await detectBug();
     
-    if (!validate()) {
-      toast({
-        title: "Ошибка валидации",
-        description: "Пожалуйста, исправьте ошибки в форме",
-        variant: "destructive"
-      });
-      return;
+    // Prevent multiple submissions
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+    
+    try {
+      // Check for "save without changes" bug before validation
+      const bugDetected = await detectBug();
+      console.log("Bug detected:", bugDetected);
+      
+      if (!validate()) {
+        toast({
+          title: "Ошибка валидации",
+          description: "Пожалуйста, исправьте ошибки в форме",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      // Call onSubmit to save the article
+      onSubmit(title, content, category);
+    } finally {
+      setIsSubmitting(false);
     }
-
-    // Call onSubmit to save the article
-    onSubmit(title, content, category);
   };
 
   return <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
@@ -176,7 +185,11 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             <Button type="button" variant="outline" onClick={onCancel}>
               Отмена
             </Button>
-            <Button type="submit" className="text-base">
+            <Button 
+              type="submit" 
+              className="text-base"
+              disabled={isSubmitting}
+            >
               {isEditing ? 'Сохранить изменения' : 'Создать статью'}
             </Button>
           </div>
