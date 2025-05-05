@@ -32,6 +32,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [bugDetectionDone, setBugDetectionDone] = useState(false);
   const initialRender = useRef(true);
   
   const {
@@ -40,11 +41,6 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   } = useBugs();
   
   const isEditing = !!article;
-
-  // Log foundBugs whenever it changes
-  useEffect(() => {
-    console.log("Current foundBugs in ArticleForm:", foundBugs);
-  }, [foundBugs]);
 
   // Track changes when editing an existing article
   useEffect(() => {
@@ -87,23 +83,22 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     return isValid;
   };
 
-  // Separate function for bug detection with consistent state handling
-  const detectBug = async () => {
+  // Detect bug with a separate function that returns a promise
+  const detectBug = async (): Promise<boolean> => {
     if (isEditing && !hasChanges) {
       console.log("Detecting save without changes bug!");
       
-      // Process the bug detection with a clear promise chain
-      return new Promise<boolean>((resolve) => {
-        // Add a minimal delay to ensure state updates have processed
-        setTimeout(() => {
-          const result = checkForBug(
-            'save-without-changes-bug',
-            'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
-            'Сохранение статьи без внесения изменений'
-          );
-          console.log("Bug detection result:", result);
-          resolve(result);
-        }, 0);
+      // Use a promise to ensure we can await the bug detection
+      return new Promise<boolean>(resolve => {
+        const bugResult = checkForBug(
+          'save-without-changes-bug',
+          'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
+          'Сохранение статьи без внесения изменений'
+        );
+        
+        console.log("Bug detection result:", bugResult);
+        setBugDetectionDone(true);
+        resolve(bugResult);
       });
     }
     return Promise.resolve(false);
@@ -117,7 +112,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     setIsSubmitting(true);
     
     try {
-      // Check for "save without changes" bug before validation
+      // First detect any bugs
       const bugDetected = await detectBug();
       console.log("Bug detected:", bugDetected);
       
@@ -130,8 +125,15 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         return;
       }
       
-      // Call onSubmit to save the article
+      // If validation passes, call onSubmit
       onSubmit(title, content, category);
+    } catch (error) {
+      console.error("Error during form submission:", error);
+      toast({
+        title: "Ошибка",
+        description: "Произошла ошибка при сохранении статьи",
+        variant: "destructive"
+      });
     } finally {
       setIsSubmitting(false);
     }

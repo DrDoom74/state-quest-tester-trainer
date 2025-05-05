@@ -65,15 +65,6 @@ export function useBugs() {
     loadSavedBugs();
   }, []);
 
-  // Save bugs whenever they change
-  useEffect(() => {
-    if (foundBugs.length > 0) {
-      console.log("Saving bugs to localStorage:", foundBugs);
-      localStorage.setItem(BUGS_STORAGE_KEY, JSON.stringify(foundBugs));
-      localStorage.setItem(BUGS_COUNT_KEY, bugsCount.toString());
-    }
-  }, [foundBugs, bugsCount]);
-
   // Core function to register a bug - ensuring it's properly synchronized
   const checkForBug = useCallback((bugId: string, description: string, actionDescription: string): boolean => {
     console.log(`Checking for bug: ${bugId}, already found bugs:`, foundBugs.map(b => b.id));
