@@ -17,9 +17,9 @@ export const PREDEFINED_BUGS: {
     id: 'short-title-bug',
     description: 'Обнаружен баг! Заголовок статьи меньше 5 символов.',
     actionDescription: 'Создание статьи с коротким заголовком',
-    conditionCheck: () => true // This is manually checked in the form submission
+    // Make this specific to only form submissions, not actions like delete
+    conditionCheck: (fromStatus, action) => action === 'create' || action === 'edit'
   },
-  // Removed the republish-unpublished-bug
   {
     id: 'archived-article-bug',
     description: 'Баг обнаружен. Статья в статусе Архив доступна для просмотра другим пользователям.',
@@ -159,10 +159,11 @@ function useBugsState() {
   const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {
     console.log(`Checking action for bug: status=${fromStatus}, action=${action}`);
     
-    // Ищем подходящий баг
+    // Ищем подходящий баг - важно проверять соответствие условию именно в этой функции
     const matchingBug = PREDEFINED_BUGS.find(bug => {
       const matches = bug.conditionCheck(fromStatus, action);
       const alreadyFound = foundBugs.some(found => found.id === bug.id);
+      console.log(`Bug ${bug.id}: matches=${matches}, alreadyFound=${alreadyFound}`);
       return matches && !alreadyFound;
     });
     
