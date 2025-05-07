@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { InfoIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
@@ -367,13 +368,13 @@ const InstructionsPanel: React.FC = () => {
               <li>Максимально возможное количество статей: 10</li>
             </ul>
             
-            <h4 className="font-medium mt-3 mb-2">Доступные категории ст��тей:</h4>
+            <h4 className="font-medium mt-3 mb-2">Доступные категории статей:</h4>
             <ul className="list-disc pl-5">
-              <li><strong>Technology</strong> - Статьи о технологиях, гаджетах, программном обеспечении и IT-индустрии</li>
-              <li><strong>Science</strong> - Научные статьи, исследования и открытия в различных областях науки</li>
-              <li><strong>Health</strong> - Статьи о здоровье, медицине, здоровом образе жизни и правильном питании</li>
-              <li><strong>Business</strong> - Бизнес-аналитика, новости компаний, тренды рынка и инвестиции</li>
-              <li><strong>Entertainment</strong> - Статьи о кино, музыке, искусстве, играх и других развлечениях</li>
+              <li><strong>Technology</strong></li>
+              <li><strong>Science</strong></li>
+              <li><strong>Health</strong></li>
+              <li><strong>Business</strong></li>
+              <li><strong>Entertainment</strong></li>
             </ul>
           </div>
           
