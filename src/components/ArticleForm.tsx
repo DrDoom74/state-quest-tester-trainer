@@ -17,6 +17,7 @@ interface ArticleFormProps {
 }
 
 const CATEGORIES: ArticleCategory[] = ['Technology', 'Science', 'Health', 'Business', 'Entertainment'];
+const MAX_CONTENT_LENGTH = 1000;
 
 const ArticleForm: React.FC<ArticleFormProps> = ({
   article,
@@ -72,6 +73,9 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       isValid = false;
     } else if (content.length < 20) {
       newErrors.content = 'Текст статьи должен содержать не менее 20 символов';
+      isValid = false;
+    } else if (content.length > MAX_CONTENT_LENGTH) {
+      newErrors.content = `Текст статьи не должен превышать ${MAX_CONTENT_LENGTH} символов`;
       isValid = false;
     }
     
@@ -185,7 +189,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
             <Textarea id="content" placeholder="Введите текст статьи" value={content} onChange={e => setContent(e.target.value)} className={`min-h-[150px] ${errors.content ? "border-red-500" : ""}`} />
             {errors.content && <div className="text-red-500 text-sm mt-1">{errors.content}</div>}
             <div className="text-xs text-gray-500">
-              {content.length} символов (минимум 20)
+              {content.length}/{MAX_CONTENT_LENGTH} символов (минимум 20, максимум {MAX_CONTENT_LENGTH})
             </div>
           </div>
           
