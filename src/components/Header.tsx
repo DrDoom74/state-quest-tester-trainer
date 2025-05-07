@@ -29,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({
           <div className={`flex ${isMobile ? "flex-col w-full" : "items-center"} gap-2 sm:gap-4`}>
             <div className="bg-red-600 text-white px-3 py-1 rounded-full flex items-center gap-1 self-center sm:self-auto">
               <BugIcon className="h-4 w-4" />
-              <span className="font-semibold">{bugsCount}/5</span>
+              <span className="font-semibold">{bugsCount}/4</span>
             </div>
             
             <div className={`flex ${isMobile ? "flex-col w-full" : "space-x-2"} gap-2`}>
