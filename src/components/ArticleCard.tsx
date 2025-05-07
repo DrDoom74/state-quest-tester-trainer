@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Article, ArticleStatus, UserRole } from '@/types';
 import { Button } from "@/components/ui/button";
@@ -148,6 +147,10 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
                 <Button size="sm" variant="outline" className="bg-gray-100" onClick={() => onArchive(article.id)}>
                   <ArchiveIcon className="h-3.5 w-3.5 mr-1" />
                   В архив
+                </Button>
+                <Button size="sm" variant="destructive" onClick={() => onDelete(article.id)}>
+                  <TrashIcon className="h-3.5 w-3.5 mr-1" />
+                  Удалить
                 </Button>
               </>
             )}
