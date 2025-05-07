@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -153,10 +152,10 @@ export function useArticles() {
         return prev;
       }
       
-      // Check for delete-unpublished-bug - explicit check for the specific bug scenario
+      // Specific check for the delete-unpublished bug scenario with detailed logging
       if (activeRole === 'user' && article.status === 'unpublished' && action === 'delete') {
-        console.log('Checking for delete-unpublished bug...');
-        // Only check for the specific "delete-unpublished" bug rather than any bug
+        console.log('Specific check for delete-unpublished bug triggered');
+        // Pass the exact status and action for precise bug detection
         checkActionForBug('unpublished', 'delete');
       }
       

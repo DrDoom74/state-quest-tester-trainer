@@ -50,13 +50,15 @@ const Index = () => {
   const handleViewArticle = (id: string) => {
     const article = articles.find(a => a.id === id);
     if (article) {
-      // Check for archived article bug
+      // Check for archived article bug - improved to use proper action parameter
       if (article.status === 'archived' && activeRole !== 'user') {
         checkForBug(
           'archived-article-bug', 
           'Баг обнаружен. Статья в статусе Архив доступна для просмотра другим пользователям.', 
           'Просмотр статьи в статусе Архив'
         );
+        // Alternative approach using checkActionForBug
+        // checkActionForBug('archived', 'view');
       }
       setViewArticle(article);
     }

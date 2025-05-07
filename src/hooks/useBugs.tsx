@@ -7,36 +7,40 @@ const BUGS_STORAGE_KEY = 'qa-simulator-bugs';
 const BUGS_COUNT_KEY = 'qa-simulator-bugs-count';
 const TOAST_TIMEOUT = 10000; // Auto-dismiss toast after 10 seconds
 
+// Reorder and make condition checks more specific
 export const PREDEFINED_BUGS: { 
   id: string;
   description: string;
   actionDescription: string;
   conditionCheck: (fromStatus: string, action: string) => boolean;
 }[] = [
+  // Place the most specific bugs first in the array
+  {
+    id: 'delete-unpublished-bug',
+    description: 'Обнаружен баг! Пользователь может удалить снятую с публикации статью',
+    actionDescription: 'Удаление снятой с публикации статьи пользователем',
+    conditionCheck: (fromStatus, action) => fromStatus === 'unpublished' && action === 'delete'
+  },
   {
     id: 'short-title-bug',
     description: 'Обнаружен баг! Заголовок статьи меньше 5 символов.',
     actionDescription: 'Создание статьи с коротким заголовком',
-    // Make this specific to only form submissions, not actions like delete
+    // Only trigger for form submission actions, not for article status changes
     conditionCheck: (fromStatus, action) => action === 'create' || action === 'edit'
   },
   {
     id: 'archived-article-bug',
     description: 'Баг обнаружен. Статья в статусе Архив доступна для просмотра другим пользователям.',
     actionDescription: 'Просмотр статьи в статусе Архив',
-    conditionCheck: () => true // This is manually checked in the article view
+    // Only trigger for archived viewing checks
+    conditionCheck: (fromStatus, action) => action === 'view' && fromStatus === 'archived'
   },
   {
     id: 'save-without-changes-bug',
     description: 'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
     actionDescription: 'Сохранение статьи без внесения изменений',
-    conditionCheck: () => true // This is manually checked in the form submission
-  },
-  {
-    id: 'delete-unpublished-bug',
-    description: 'Обнаружен баг! Пользователь может удалить снятую с публикации статью',
-    actionDescription: 'Удаление снятой с публикации статьи пользователем',
-    conditionCheck: (fromStatus, action) => fromStatus === 'unpublished' && action === 'delete'
+    // Only trigger for save actions
+    conditionCheck: (fromStatus, action) => action === 'save-unchanged'
   }
 ];
 
@@ -155,28 +159,28 @@ function useBugsState() {
     }
   }, [foundBugs]);
 
-  // Функция для проверки багов на основе действий
+  // Функция для проверки багов на основе действий - improved with better logging
   const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {
-    console.log(`Checking action for bug: status=${fromStatus}, action=${action}`);
+    console.log(`Checking action for bug: status='${fromStatus}', action='${action}'`);
     
-    // Ищем подходящий баг - важно проверять соответствие условию именно в этой функции
-    const matchingBug = PREDEFINED_BUGS.find(bug => {
+    // Loop through each bug to provide detailed logging
+    for (const bug of PREDEFINED_BUGS) {
       const matches = bug.conditionCheck(fromStatus, action);
       const alreadyFound = foundBugs.some(found => found.id === bug.id);
       console.log(`Bug ${bug.id}: matches=${matches}, alreadyFound=${alreadyFound}`);
-      return matches && !alreadyFound;
-    });
-    
-    if (matchingBug) {
-      console.log(`Found matching bug: ${matchingBug.id}`);
-      return checkForBug(
-        matchingBug.id, 
-        matchingBug.description, 
-        matchingBug.actionDescription
-      );
+      
+      // If we found a matching bug that hasn't been found yet, register it
+      if (matches && !alreadyFound) {
+        console.log(`Found matching bug: ${bug.id} with description: ${bug.description}`);
+        return checkForBug(
+          bug.id, 
+          bug.description, 
+          bug.actionDescription
+        );
+      }
     }
     
-    console.log(`No matching bug found for status=${fromStatus}, action=${action}`);
+    console.log(`No matching bug found for status='${fromStatus}', action='${action}'`);
     return false;
   }, [foundBugs, checkForBug]);
 
