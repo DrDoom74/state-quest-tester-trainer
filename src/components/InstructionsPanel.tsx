@@ -1,10 +1,12 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { InfoIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const InstructionsPanel: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const isMobile = useIsMobile();
   
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mb-6">
@@ -31,162 +33,328 @@ const InstructionsPanel: React.FC = () => {
           
           <div>
             <h3 className="font-bold mb-2">1. Видимость статьи по статусам и ролям</h3>
-            <table className="min-w-full border-collapse mt-1 text-xs">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border px-2 py-1 text-left">Состояние</th>
-                  <th className="border px-2 py-1 text-center">Пользователь 1</th>
-                  <th className="border px-2 py-1 text-center">Модератор</th>
-                  <th className="border px-2 py-1 text-center">Гость</th>
-                </tr>
-              </thead>
-              <tbody>
-                {[
-                  { state: 'Черновик', user: '✓', moderator: '—', guest: '—' },
-                  { state: 'На модерации', user: '✓', moderator: '✓', guest: '—' },
-                  { state: 'Отклонена', user: '✓', moderator: '✓', guest: '—' },
-                  { state: 'Опубликована', user: '✓', moderator: '✓', guest: '✓' },
-                  { state: 'Снята с публикации', user: '✓', moderator: '✓', guest: '—' },
-                  { state: 'Архив', user: '✓', moderator: '—', guest: '—' }
-                ].map((row, index) => (
-                  <tr key={index}>
-                    <td className="border px-2 py-1">{row.state}</td>
-                    <td className="border px-2 py-1 text-center">{row.user}</td>
-                    <td className="border px-2 py-1 text-center">{row.moderator}</td>
-                    <td className="border px-2 py-1 text-center">{row.guest}</td>
+            {isMobile ? (
+              <div className="overflow-x-auto pb-2">
+                <div className="inline-block min-w-full">
+                  <table className="min-w-full border-collapse mt-1 text-xs">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border px-2 py-1 text-left">Состояние</th>
+                        <th className="border px-2 py-1 text-center">Пользователь 1</th>
+                        <th className="border px-2 py-1 text-center">Модератор</th>
+                        <th className="border px-2 py-1 text-center">Гость</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {[
+                        { state: 'Черновик', user: '✓', moderator: '—', guest: '—' },
+                        { state: 'На модерации', user: '✓', moderator: '✓', guest: '—' },
+                        { state: 'Отклонена', user: '✓', moderator: '✓', guest: '—' },
+                        { state: 'Опубликована', user: '✓', moderator: '✓', guest: '✓' },
+                        { state: 'Снята с публикации', user: '✓', moderator: '✓', guest: '—' },
+                        { state: 'Архив', user: '✓', moderator: '—', guest: '—' }
+                      ].map((row, index) => (
+                        <tr key={index}>
+                          <td className="border px-2 py-1">{row.state}</td>
+                          <td className="border px-2 py-1 text-center">{row.user}</td>
+                          <td className="border px-2 py-1 text-center">{row.moderator}</td>
+                          <td className="border px-2 py-1 text-center">{row.guest}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : (
+              <table className="min-w-full border-collapse mt-1 text-xs">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border px-2 py-1 text-left">Состояние</th>
+                    <th className="border px-2 py-1 text-center">Пользователь 1</th>
+                    <th className="border px-2 py-1 text-center">Модератор</th>
+                    <th className="border px-2 py-1 text-center">Гость</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {[
+                    { state: 'Черновик', user: '✓', moderator: '—', guest: '—' },
+                    { state: 'На модерации', user: '✓', moderator: '✓', guest: '—' },
+                    { state: 'Отклонена', user: '✓', moderator: '✓', guest: '—' },
+                    { state: 'Опубликована', user: '✓', moderator: '✓', guest: '✓' },
+                    { state: 'Снята с публикации', user: '✓', moderator: '✓', guest: '—' },
+                    { state: 'Архив', user: '✓', moderator: '—', guest: '—' }
+                  ].map((row, index) => (
+                    <tr key={index}>
+                      <td className="border px-2 py-1">{row.state}</td>
+                      <td className="border px-2 py-1 text-center">{row.user}</td>
+                      <td className="border px-2 py-1 text-center">{row.moderator}</td>
+                      <td className="border px-2 py-1 text-center">{row.guest}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
           
           <div>
             <h3 className="font-bold mb-2">2. Доступные действия и переходы по статусам</h3>
-            <table className="min-w-full border-collapse mt-1 text-xs">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border px-2 py-1 text-left">Состояние</th>
-                  <th className="border px-2 py-1 text-left">Действие</th>
-                  <th className="border px-2 py-1 text-left">Переход в статус</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr className="bg-gray-200 font-semibold">
-                  <td className="border px-2 py-1" colSpan={3}>Пользователь 1</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Черновик</td>
-                  <td className="border px-2 py-1">Редактировать<br />Удалить<br />Отправить на модерацию</td>
-                  <td className="border px-2 py-1">На модерации</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">На модерации</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1">—</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Отклонена</td>
-                  <td className="border px-2 py-1">Редактировать<br />Удалить</td>
-                  <td className="border px-2 py-1">Черновик</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Опубликована</td>
-                  <td className="border px-2 py-1">Редактировать</td>
-                  <td className="border px-2 py-1">Черновик</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Опубликована</td>
-                  <td className="border px-2 py-1">В архив</td>
-                  <td className="border px-2 py-1">Архив</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Снята с публикации</td>
-                  <td className="border px-2 py-1">Редактировать</td>
-                  <td className="border px-2 py-1">Черновик</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Снята с публикации</td>
-                  <td className="border px-2 py-1">В архив</td>
-                  <td className="border px-2 py-1">Архив</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Архив</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr className="bg-gray-200 font-semibold">
-                  <td className="border px-2 py-1" colSpan={3}>Модератор</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Черновик</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">На модерации</td>
-                  <td className="border px-2 py-1">Одобрить</td>
-                  <td className="border px-2 py-1">Опубликована</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">На модерации</td>
-                  <td className="border px-2 py-1">Отклонить</td>
-                  <td className="border px-2 py-1">Отклонена</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Отклонена</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Опубликована</td>
-                  <td className="border px-2 py-1">Снять с публикации</td>
-                  <td className="border px-2 py-1">Снята с публикации</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Снята с публикации</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Архив</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr className="bg-gray-200 font-semibold">
-                  <td className="border px-2 py-1" colSpan={3}>Гость</td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Черновик</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">На модерации</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Отклонена</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Опубликована</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Снята с публикации</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-                <tr>
-                  <td className="border px-2 py-1">Архив</td>
-                  <td className="border px-2 py-1">—</td>
-                  <td className="border px-2 py-1"></td>
-                </tr>
-              </tbody>
-            </table>
+            {isMobile ? (
+              <div className="overflow-x-auto pb-2">
+                <div className="inline-block min-w-full">
+                  <table className="min-w-full border-collapse mt-1 text-xs">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="border px-2 py-1 text-left">Состояние</th>
+                        <th className="border px-2 py-1 text-left">Действие</th>
+                        <th className="border px-2 py-1 text-left">Переход в статус</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr className="bg-gray-200 font-semibold">
+                        <td className="border px-2 py-1" colSpan={3}>Пользователь 1</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Черновик</td>
+                        <td className="border px-2 py-1">Редактировать<br />Удалить<br />Отправить на модерацию</td>
+                        <td className="border px-2 py-1">На модерации</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">На модерации</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1">—</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Отклонена</td>
+                        <td className="border px-2 py-1">Редактировать<br />Удалить</td>
+                        <td className="border px-2 py-1">Черновик</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Опубликована</td>
+                        <td className="border px-2 py-1">Редактировать</td>
+                        <td className="border px-2 py-1">Черновик</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Опубликована</td>
+                        <td className="border px-2 py-1">В архив</td>
+                        <td className="border px-2 py-1">Архив</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Снята с публикации</td>
+                        <td className="border px-2 py-1">Редактировать</td>
+                        <td className="border px-2 py-1">Черновик</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Снята с публикации</td>
+                        <td className="border px-2 py-1">В архив</td>
+                        <td className="border px-2 py-1">Архив</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Архив</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr className="bg-gray-200 font-semibold">
+                        <td className="border px-2 py-1" colSpan={3}>Модератор</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Черновик</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">На модерации</td>
+                        <td className="border px-2 py-1">Одобрить</td>
+                        <td className="border px-2 py-1">Опубликована</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">На модерации</td>
+                        <td className="border px-2 py-1">Отклонить</td>
+                        <td className="border px-2 py-1">Отклонена</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Отклонена</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Опубликована</td>
+                        <td className="border px-2 py-1">Снять с публикации</td>
+                        <td className="border px-2 py-1">Снята с публикации</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Снята с публикации</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Архив</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr className="bg-gray-200 font-semibold">
+                        <td className="border px-2 py-1" colSpan={3}>Гость</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Черновик</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">На модерации</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Отклонена</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Опубликована</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Снята с публикации</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">Архив</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            ) : (
+              <table className="min-w-full border-collapse mt-1 text-xs">
+                <thead>
+                  <tr className="bg-gray-100">
+                    <th className="border px-2 py-1 text-left">Состояние</th>
+                    <th className="border px-2 py-1 text-left">Действие</th>
+                    <th className="border px-2 py-1 text-left">Переход в статус</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="bg-gray-200 font-semibold">
+                    <td className="border px-2 py-1" colSpan={3}>Пользователь 1</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Черновик</td>
+                    <td className="border px-2 py-1">Редактировать<br />Удалить<br />Отправить на модерацию</td>
+                    <td className="border px-2 py-1">На модерации</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">На модерации</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1">—</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Отклонена</td>
+                    <td className="border px-2 py-1">Редактировать<br />Удалить</td>
+                    <td className="border px-2 py-1">Черновик</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Опубликована</td>
+                    <td className="border px-2 py-1">Редактировать</td>
+                    <td className="border px-2 py-1">Черновик</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Опубликована</td>
+                    <td className="border px-2 py-1">В архив</td>
+                    <td className="border px-2 py-1">Архив</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Снята с публикации</td>
+                    <td className="border px-2 py-1">Редактировать</td>
+                    <td className="border px-2 py-1">Черновик</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Снята с публикации</td>
+                    <td className="border px-2 py-1">В архив</td>
+                    <td className="border px-2 py-1">Архив</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Архив</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr className="bg-gray-200 font-semibold">
+                    <td className="border px-2 py-1" colSpan={3}>Модератор</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Черновик</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">На модерации</td>
+                    <td className="border px-2 py-1">Одобрить</td>
+                    <td className="border px-2 py-1">Опубликована</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">На модерации</td>
+                    <td className="border px-2 py-1">Отклонить</td>
+                    <td className="border px-2 py-1">Отклонена</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Отклонена</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Опубликована</td>
+                    <td className="border px-2 py-1">Снять с публикации</td>
+                    <td className="border px-2 py-1">Снята с публикации</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Снята с публикации</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Архив</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr className="bg-gray-200 font-semibold">
+                    <td className="border px-2 py-1" colSpan={3}>Гость</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Черновик</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">На модерации</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Отклонена</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Опубликована</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Снята с публикации</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">Архив</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                </tbody>
+              </table>
+            )}
           </div>
           
           <div>
