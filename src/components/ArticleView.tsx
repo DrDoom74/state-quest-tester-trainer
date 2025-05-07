@@ -71,7 +71,7 @@ const ArticleView: React.FC<ArticleViewProps> = ({
           
           <div className="space-y-2">
             <div className="text-sm font-medium text-gray-500">Текст статьи</div>
-            <div className="p-2 bg-gray-50 rounded border border-gray-200 min-h-[150px] whitespace-pre-wrap">
+            <div className="p-2 bg-gray-50 rounded border border-gray-200 min-h-[150px] whitespace-pre-wrap break-words">
               {article.content}
             </div>
           </div>

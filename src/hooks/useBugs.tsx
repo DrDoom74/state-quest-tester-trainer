@@ -31,6 +31,12 @@ export const PREDEFINED_BUGS: {
     description: 'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
     actionDescription: 'Сохранение статьи без внесения изменений',
     conditionCheck: () => true // This is manually checked in the form submission
+  },
+  {
+    id: 'delete-unpublished-bug',
+    description: 'Обнаружен баг! Пользователь может удалить снятую с публикации статью',
+    actionDescription: 'Удаление снятой с публикации статьи пользователем',
+    conditionCheck: (fromStatus, action) => fromStatus === 'unpublished' && action === 'delete'
   }
 ];
 

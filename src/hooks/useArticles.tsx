@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,7 +14,7 @@ const VALID_TRANSITIONS: Record<UserRole, Record<ArticleStatus, ActionType[]>> =
     moderation: [], // No actions for users on moderation state
     rejected: ['edit', 'delete'],
     published: ['edit', 'archive'],
-    unpublished: ['edit', 'archive'],
+    unpublished: ['edit', 'archive', 'delete'], // Added delete option for unpublished articles
     archived: [], // No actions for archived
   },
   moderator: {
@@ -153,7 +152,11 @@ export function useArticles() {
         return prev;
       }
       
-      // Removed the bug check for republish action
+      // Check for delete-unpublished-bug
+      if (activeRole === 'user' && article.status === 'unpublished' && action === 'delete') {
+        // Bug will be checked in checkActionForBug function
+        checkActionForBug(article.status, action);
+      }
       
       success = true;
       
@@ -182,7 +185,7 @@ export function useArticles() {
     });
     
     return success;
-  }, [activeRole]);
+  }, [activeRole, checkActionForBug]);
 
   const clearAllArticles = useCallback(() => {
     setArticles([]);
