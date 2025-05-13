@@ -1,8 +1,9 @@
 
 import React from 'react';
-import { BugIcon, BookOpenIcon, RefreshCwIcon, TrashIcon, ExternalLinkIcon } from 'lucide-react';
+import { BugIcon, BookOpenIcon, RefreshCwIcon, TrashIcon, ExternalLinkIcon, GlobeIcon } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface HeaderProps {
   bugsCount: number;
@@ -16,6 +17,11 @@ const Header: React.FC<HeaderProps> = ({
   onClearBlogClick 
 }) => {
   const isMobile = useIsMobile();
+  const { language, setLanguage, t } = useLanguage();
+  
+  const toggleLanguage = () => {
+    setLanguage(language === 'ru' ? 'en' : 'ru');
+  };
   
   return (
     <header className="bg-gradient-to-r from-indigo-600 to-violet-500 text-white py-3 px-4 shadow-md">
@@ -23,13 +29,13 @@ const Header: React.FC<HeaderProps> = ({
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
           <div className="flex items-center gap-2">
             <BookOpenIcon className="h-6 w-6" />
-            <h1 className="text-xl font-bold">QA State Transition Тренажер</h1>
+            <h1 className="text-xl font-bold">{t('app.title')}</h1>
           </div>
           
           <div className={`flex ${isMobile ? "flex-col w-full" : "items-center"} gap-2 sm:gap-4`}>
             <div className="bg-red-600 text-white px-3 py-1 rounded-full flex items-center gap-1 self-center sm:self-auto">
               <BugIcon className="h-4 w-4" />
-              <span className="font-semibold">{bugsCount}/4</span>
+              <span className="font-semibold">{bugsCount}{t('bugs.count')}</span>
             </div>
             
             <div className={`flex ${isMobile ? "flex-col w-full" : "space-x-2"} gap-2`}>
@@ -40,7 +46,7 @@ const Header: React.FC<HeaderProps> = ({
                 className={`${isMobile ? "w-full" : ""} bg-white/10 text-white border border-white/30 hover:bg-white hover:text-violet-600`}
               >
                 <RefreshCwIcon className="h-4 w-4 mr-1" />
-                Сбросить прогресс
+                {t('button.resetProgress')}
               </Button>
               
               <Button 
@@ -50,7 +56,7 @@ const Header: React.FC<HeaderProps> = ({
                 className={`${isMobile ? "w-full" : ""} bg-white/10 text-white border border-white/30 hover:bg-white hover:text-violet-600`}
               >
                 <TrashIcon className="h-4 w-4 mr-1" />
-                Очистить блог
+                {t('button.clearBlog')}
               </Button>
               
               <Button 
@@ -60,7 +66,17 @@ const Header: React.FC<HeaderProps> = ({
                 onClick={() => window.open('https://boosty.to/aklimenko', '_blank')}
               >
                 <ExternalLinkIcon className="h-4 w-4 mr-1" />
-                Ответы
+                {t('button.answers')}
+              </Button>
+
+              <Button 
+                variant="secondary" 
+                size="sm" 
+                onClick={toggleLanguage}
+                className={`${isMobile ? "w-full" : ""} bg-white/10 text-white border border-white/30 hover:bg-white hover:text-violet-600`}
+              >
+                <GlobeIcon className="h-4 w-4 mr-1" />
+                {t('button.language')}
               </Button>
             </div>
           </div>

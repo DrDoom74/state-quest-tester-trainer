@@ -13,6 +13,7 @@ import { Article, ArticleCategory, UserRole } from '@/types';
 import { toast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RoleSelector from '@/components/RoleSelector';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const Index = () => {
   const { 
@@ -28,6 +29,7 @@ const Index = () => {
   } = useArticles();
   
   const { foundBugs, bugsCount, resetBugs, checkForBug } = useBugs();
+  const { t } = useLanguage();
   
   const [showForm, setShowForm] = useState(false);
   const [editArticle, setEditArticle] = useState<Article | undefined>(undefined);
@@ -54,8 +56,8 @@ const Index = () => {
       if (article.status === 'archived' && activeRole !== 'user') {
         checkForBug(
           'archived-article-bug', 
-          'Баг обнаружен. Статья в статусе Архив доступна для просмотра другим пользователям.', 
-          'Просмотр статьи в статусе Архив'
+          t('bug.archivedView'), 
+          t('bug.archivedViewAction')
         );
         // Alternative approach using checkActionForBug
         // checkActionForBug('archived', 'view');
@@ -75,8 +77,8 @@ const Index = () => {
         console.log("Checking for short title bug");
         checkForBug(
           'short-title-bug', 
-          'Обнаружен баг! Заголовок статьи меньше 5 символов.', 
-          'Создание статьи с коротким заголовком'
+          t('bug.shortTitle'), 
+          t('bug.shortTitleAction')
         );
       }, 50);
     }
@@ -86,16 +88,16 @@ const Index = () => {
       if (updated) {
         performAction(editArticle.id, 'edit');
         toast({
-          title: "Статья обновлена",
-          description: "Изменения сохранены успешно",
+          title: t('toast.articleUpdated'),
+          description: t('toast.articleUpdatedDesc'),
         });
       }
     } else {
       const newArticle = createArticle(title, content, category);
       if (newArticle) {
         toast({
-          title: "Статья создана",
-          description: "Новая статья добавлена в черновики",
+          title: t('toast.articleCreated'),
+          description: t('toast.articleCreatedDesc'),
         });
       }
     }
@@ -112,8 +114,8 @@ const Index = () => {
     const success = performAction(id, 'delete');
     if (success) {
       toast({
-        title: "Статья удалена",
-        description: "Статья была удалена",
+        title: t('toast.articleDeleted'),
+        description: t('toast.articleDeletedDesc'),
       });
     }
   };
@@ -122,8 +124,8 @@ const Index = () => {
     const success = performAction(id, 'submitForModeration');
     if (success) {
       toast({
-        title: "Отправлено на модерацию",
-        description: "Статья отправлена на модерацию",
+        title: t('toast.sentToModeration'),
+        description: t('toast.sentToModerationDesc'),
       });
     }
   };
@@ -132,8 +134,8 @@ const Index = () => {
     const success = performAction(id, 'publish');
     if (success) {
       toast({
-        title: "Статья опубликована",
-        description: "Статья успешно опубликована",
+        title: t('toast.published'),
+        description: t('toast.publishedDesc'),
       });
     }
   };
@@ -142,8 +144,8 @@ const Index = () => {
     const success = performAction(id, 'unpublish');
     if (success) {
       toast({
-        title: "Статья снята с публикации",
-        description: "Статья снята с публикации",
+        title: t('toast.unpublished'),
+        description: t('toast.unpublishedDesc'),
       });
     }
   };
@@ -152,8 +154,8 @@ const Index = () => {
     const success = performAction(id, 'republish');
     if (success) {
       toast({
-        title: "Статья опубликована",
-        description: "Статья повторно опубликована",
+        title: t('toast.republished'),
+        description: t('toast.republishedDesc'),
       });
     }
   };
@@ -162,8 +164,8 @@ const Index = () => {
     const success = performAction(id, 'reject');
     if (success) {
       toast({
-        title: "Статья отклонена",
-        description: "Статья была отклонена модератором",
+        title: t('toast.rejected'),
+        description: t('toast.rejectedDesc'),
       });
     }
   };
@@ -172,8 +174,8 @@ const Index = () => {
     const success = performAction(id, 'archive');
     if (success) {
       toast({
-        title: "Статья в архиве",
-        description: "Статья перемещена в архив",
+        title: t('toast.archived'),
+        description: t('toast.archivedDesc'),
       });
     }
   };
@@ -195,8 +197,8 @@ const Index = () => {
         
         <Tabs defaultValue="articles" className="mb-6">
           <TabsList>
-            <TabsTrigger value="articles">Статьи</TabsTrigger>
-            <TabsTrigger value="bugs">Найденные баги</TabsTrigger>
+            <TabsTrigger value="articles">{t('tabs.articles')}</TabsTrigger>
+            <TabsTrigger value="bugs">{t('tabs.bugs')}</TabsTrigger>
           </TabsList>
           <TabsContent value="articles">
             <div className="mb-4">

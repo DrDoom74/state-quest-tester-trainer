@@ -4,17 +4,19 @@ import { Button } from "@/components/ui/button";
 import { InfoIcon, ChevronDownIcon, ChevronUpIcon } from 'lucide-react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useLanguage } from '@/hooks/useLanguage';
 
 const InstructionsPanel: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const isMobile = useIsMobile();
+  const { t } = useLanguage();
   
   return (
     <div className="bg-white rounded-lg shadow-md p-4 mb-6">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
           <InfoIcon className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold">Описание задания</h2>
+          <h2 className="text-lg font-semibold">{t('instructions.title')}</h2>
         </div>
         <Button 
           variant="ghost" 
@@ -29,31 +31,31 @@ const InstructionsPanel: React.FC = () => {
       {isExpanded && (
         <div className="mt-4 text-sm space-y-4">
           <p>
-            <strong>Цель тренажера:</strong> протестировать функционал блога и найти баги, анализируя переходы состояний статьи в системе публикации.
+            <strong>{t('instructions.purpose')}</strong>
           </p>
           
           <div>
-            <h3 className="font-bold mb-2">1. Видимость статьи по статусам и ролям</h3>
+            <h3 className="font-bold mb-2">{t('instructions.visibilityTitle')}</h3>
             {isMobile ? (
               <div className="overflow-x-auto pb-2">
                 <div className="inline-block min-w-full">
                   <table className="min-w-full border-collapse mt-1 text-xs">
                     <thead>
                       <tr className="bg-gray-100">
-                        <th className="border px-2 py-1 text-left">Состояние</th>
-                        <th className="border px-2 py-1 text-center">Пользователь 1</th>
-                        <th className="border px-2 py-1 text-center">Модератор</th>
-                        <th className="border px-2 py-1 text-center">Гость</th>
+                        <th className="border px-2 py-1 text-left">{t('article.status')}</th>
+                        <th className="border px-2 py-1 text-center">{t('role.user')}</th>
+                        <th className="border px-2 py-1 text-center">{t('role.moderator')}</th>
+                        <th className="border px-2 py-1 text-center">{t('role.guest')}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {[
-                        { state: 'Черновик', user: '✓', moderator: '—', guest: '—' },
-                        { state: 'На модерации', user: '✓', moderator: '✓', guest: '—' },
-                        { state: 'Отклонена', user: '✓', moderator: '✓', guest: '—' },
-                        { state: 'Опубликована', user: '✓', moderator: '✓', guest: '✓' },
-                        { state: 'Снята с публикации', user: '✓', moderator: '✓', guest: '—' },
-                        { state: 'Архив', user: '✓', moderator: '—', guest: '—' }
+                        { state: t('state.draft'), user: '✓', moderator: '—', guest: '—' },
+                        { state: t('state.moderation'), user: '✓', moderator: '✓', guest: '—' },
+                        { state: t('state.rejected'), user: '✓', moderator: '✓', guest: '—' },
+                        { state: t('state.published'), user: '✓', moderator: '✓', guest: '✓' },
+                        { state: t('state.unpublished'), user: '✓', moderator: '✓', guest: '—' },
+                        { state: t('state.archived'), user: '✓', moderator: '—', guest: '—' }
                       ].map((row, index) => (
                         <tr key={index}>
                           <td className="border px-2 py-1">{row.state}</td>
@@ -70,20 +72,20 @@ const InstructionsPanel: React.FC = () => {
               <table className="min-w-full border-collapse mt-1 text-xs">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border px-2 py-1 text-left">Состояние</th>
-                    <th className="border px-2 py-1 text-center">Пользователь 1</th>
-                    <th className="border px-2 py-1 text-center">Модератор</th>
-                    <th className="border px-2 py-1 text-center">Гость</th>
+                    <th className="border px-2 py-1 text-left">{t('article.status')}</th>
+                    <th className="border px-2 py-1 text-center">{t('role.user')}</th>
+                    <th className="border px-2 py-1 text-center">{t('role.moderator')}</th>
+                    <th className="border px-2 py-1 text-center">{t('role.guest')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {[
-                    { state: 'Черновик', user: '✓', moderator: '—', guest: '—' },
-                    { state: 'На модерации', user: '✓', moderator: '✓', guest: '—' },
-                    { state: 'Отклонена', user: '✓', moderator: '✓', guest: '—' },
-                    { state: 'Опубликована', user: '✓', moderator: '✓', guest: '✓' },
-                    { state: 'Снята с публикации', user: '✓', moderator: '✓', guest: '—' },
-                    { state: 'Архив', user: '✓', moderator: '—', guest: '—' }
+                    { state: t('state.draft'), user: '✓', moderator: '—', guest: '—' },
+                    { state: t('state.moderation'), user: '✓', moderator: '✓', guest: '—' },
+                    { state: t('state.rejected'), user: '✓', moderator: '✓', guest: '—' },
+                    { state: t('state.published'), user: '✓', moderator: '✓', guest: '✓' },
+                    { state: t('state.unpublished'), user: '✓', moderator: '✓', guest: '—' },
+                    { state: t('state.archived'), user: '✓', moderator: '—', guest: '—' }
                   ].map((row, index) => (
                     <tr key={index}>
                       <td className="border px-2 py-1">{row.state}</td>
@@ -98,130 +100,130 @@ const InstructionsPanel: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="font-bold mb-2">2. Доступные действия и переходы по статусам</h3>
+            <h3 className="font-bold mb-2">{t('instructions.actionsTitle')}</h3>
             {isMobile ? (
               <div className="overflow-x-auto pb-2">
                 <div className="inline-block min-w-full">
                   <table className="min-w-full border-collapse mt-1 text-xs">
                     <thead>
                       <tr className="bg-gray-100">
-                        <th className="border px-2 py-1 text-left">Состояние</th>
-                        <th className="border px-2 py-1 text-left">Действие</th>
-                        <th className="border px-2 py-1 text-left">Переход в статус</th>
+                        <th className="border px-2 py-1 text-left">{t('article.status')}</th>
+                        <th className="border px-2 py-1 text-left">Action</th>
+                        <th className="border px-2 py-1 text-left">Transition to Status</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr className="bg-gray-200 font-semibold">
-                        <td className="border px-2 py-1" colSpan={3}>Пользователь 1</td>
+                        <td className="border px-2 py-1" colSpan={3}>{t('role.user')}</td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Черновик</td>
-                        <td className="border px-2 py-1">Редактировать<br />Удалить<br />Отправить на модерацию</td>
-                        <td className="border px-2 py-1">На модерации</td>
+                        <td className="border px-2 py-1">{t('state.draft')}</td>
+                        <td className="border px-2 py-1">{t('action.edit')}<br />{t('action.delete')}<br />{t('action.sendToModeration')}</td>
+                        <td className="border px-2 py-1">{t('state.moderation')}</td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">На модерации</td>
+                        <td className="border px-2 py-1">{t('state.moderation')}</td>
                         <td className="border px-2 py-1">—</td>
                         <td className="border px-2 py-1">—</td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Отклонена</td>
-                        <td className="border px-2 py-1">Редактировать<br />Удалить</td>
-                        <td className="border px-2 py-1">Черновик</td>
+                        <td className="border px-2 py-1">{t('state.rejected')}</td>
+                        <td className="border px-2 py-1">{t('action.edit')}<br />{t('action.delete')}</td>
+                        <td className="border px-2 py-1">{t('state.draft')}</td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Опубликована</td>
-                        <td className="border px-2 py-1">Редактировать</td>
-                        <td className="border px-2 py-1">Черновик</td>
+                        <td className="border px-2 py-1">{t('state.published')}</td>
+                        <td className="border px-2 py-1">{t('action.edit')}</td>
+                        <td className="border px-2 py-1">{t('state.draft')}</td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Опубликована</td>
-                        <td className="border px-2 py-1">В архив</td>
-                        <td className="border px-2 py-1">Архив</td>
+                        <td className="border px-2 py-1">{t('state.published')}</td>
+                        <td className="border px-2 py-1">{t('action.archive')}</td>
+                        <td className="border px-2 py-1">{t('state.archived')}</td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Снята с публикации</td>
-                        <td className="border px-2 py-1">Редактировать</td>
-                        <td className="border px-2 py-1">Черновик</td>
+                        <td className="border px-2 py-1">{t('state.unpublished')}</td>
+                        <td className="border px-2 py-1">{t('action.edit')}</td>
+                        <td className="border px-2 py-1">{t('state.draft')}</td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Снята с публикации</td>
-                        <td className="border px-2 py-1">В архив</td>
-                        <td className="border px-2 py-1">Архив</td>
+                        <td className="border px-2 py-1">{t('state.unpublished')}</td>
+                        <td className="border px-2 py-1">{t('action.archive')}</td>
+                        <td className="border px-2 py-1">{t('state.archived')}</td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Архив</td>
-                        <td className="border px-2 py-1">—</td>
-                        <td className="border px-2 py-1"></td>
-                      </tr>
-                      <tr className="bg-gray-200 font-semibold">
-                        <td className="border px-2 py-1" colSpan={3}>Модератор</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-1">Черновик</td>
-                        <td className="border px-2 py-1">—</td>
-                        <td className="border px-2 py-1"></td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-1">На модерации</td>
-                        <td className="border px-2 py-1">Одобрить</td>
-                        <td className="border px-2 py-1">Опубликована</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-1">На модерации</td>
-                        <td className="border px-2 py-1">Отклонить</td>
-                        <td className="border px-2 py-1">Отклонена</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-1">Отклонена</td>
-                        <td className="border px-2 py-1">—</td>
-                        <td className="border px-2 py-1"></td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-1">Опубликована</td>
-                        <td className="border px-2 py-1">Снять с публикации</td>
-                        <td className="border px-2 py-1">Снята с публикации</td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-1">Снята с публикации</td>
-                        <td className="border px-2 py-1">—</td>
-                        <td className="border px-2 py-1"></td>
-                      </tr>
-                      <tr>
-                        <td className="border px-2 py-1">Архив</td>
+                        <td className="border px-2 py-1">{t('state.archived')}</td>
                         <td className="border px-2 py-1">—</td>
                         <td className="border px-2 py-1"></td>
                       </tr>
                       <tr className="bg-gray-200 font-semibold">
-                        <td className="border px-2 py-1" colSpan={3}>Гость</td>
+                        <td className="border px-2 py-1" colSpan={3}>{t('role.moderator')}</td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Черновик</td>
+                        <td className="border px-2 py-1">{t('state.draft')}</td>
                         <td className="border px-2 py-1">—</td>
                         <td className="border px-2 py-1"></td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">На модерации</td>
+                        <td className="border px-2 py-1">{t('state.moderation')}</td>
+                        <td className="border px-2 py-1">{t('action.approve')}</td>
+                        <td className="border px-2 py-1">{t('state.published')}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">{t('state.moderation')}</td>
+                        <td className="border px-2 py-1">{t('action.reject')}</td>
+                        <td className="border px-2 py-1">{t('state.rejected')}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">{t('state.rejected')}</td>
                         <td className="border px-2 py-1">—</td>
                         <td className="border px-2 py-1"></td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Отклонена</td>
+                        <td className="border px-2 py-1">{t('state.published')}</td>
+                        <td className="border px-2 py-1">{t('action.unpublish')}</td>
+                        <td className="border px-2 py-1">{t('state.unpublished')}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">{t('state.unpublished')}</td>
                         <td className="border px-2 py-1">—</td>
                         <td className="border px-2 py-1"></td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Опубликована</td>
+                        <td className="border px-2 py-1">{t('state.archived')}</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr className="bg-gray-200 font-semibold">
+                        <td className="border px-2 py-1" colSpan={3}>{t('role.guest')}</td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">{t('state.draft')}</td>
                         <td className="border px-2 py-1">—</td>
                         <td className="border px-2 py-1"></td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Снята с публикации</td>
+                        <td className="border px-2 py-1">{t('state.moderation')}</td>
                         <td className="border px-2 py-1">—</td>
                         <td className="border px-2 py-1"></td>
                       </tr>
                       <tr>
-                        <td className="border px-2 py-1">Архив</td>
+                        <td className="border px-2 py-1">{t('state.rejected')}</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">{t('state.published')}</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">{t('state.unpublished')}</td>
+                        <td className="border px-2 py-1">—</td>
+                        <td className="border px-2 py-1"></td>
+                      </tr>
+                      <tr>
+                        <td className="border px-2 py-1">{t('state.archived')}</td>
                         <td className="border px-2 py-1">—</td>
                         <td className="border px-2 py-1"></td>
                       </tr>
@@ -233,123 +235,123 @@ const InstructionsPanel: React.FC = () => {
               <table className="min-w-full border-collapse mt-1 text-xs">
                 <thead>
                   <tr className="bg-gray-100">
-                    <th className="border px-2 py-1 text-left">Состояние</th>
-                    <th className="border px-2 py-1 text-left">Действие</th>
-                    <th className="border px-2 py-1 text-left">Переход в статус</th>
+                    <th className="border px-2 py-1 text-left">{t('article.status')}</th>
+                    <th className="border px-2 py-1 text-left">Action</th>
+                    <th className="border px-2 py-1 text-left">Transition to Status</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="bg-gray-200 font-semibold">
-                    <td className="border px-2 py-1" colSpan={3}>Пользователь 1</td>
+                    <td className="border px-2 py-1" colSpan={3}>{t('role.user')}</td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Черновик</td>
-                    <td className="border px-2 py-1">Редактировать<br />Удалить<br />Отправить на модерацию</td>
-                    <td className="border px-2 py-1">На модерации</td>
+                    <td className="border px-2 py-1">{t('state.draft')}</td>
+                    <td className="border px-2 py-1">{t('action.edit')}<br />{t('action.delete')}<br />{t('action.sendToModeration')}</td>
+                    <td className="border px-2 py-1">{t('state.moderation')}</td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">На модерации</td>
+                    <td className="border px-2 py-1">{t('state.moderation')}</td>
                     <td className="border px-2 py-1">—</td>
                     <td className="border px-2 py-1">—</td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Отклонена</td>
-                    <td className="border px-2 py-1">Редактировать<br />Удалить</td>
-                    <td className="border px-2 py-1">Черновик</td>
+                    <td className="border px-2 py-1">{t('state.rejected')}</td>
+                    <td className="border px-2 py-1">{t('action.edit')}<br />{t('action.delete')}</td>
+                    <td className="border px-2 py-1">{t('state.draft')}</td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Опубликована</td>
-                    <td className="border px-2 py-1">Редактировать</td>
-                    <td className="border px-2 py-1">Черновик</td>
+                    <td className="border px-2 py-1">{t('state.published')}</td>
+                    <td className="border px-2 py-1">{t('action.edit')}</td>
+                    <td className="border px-2 py-1">{t('state.draft')}</td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Опубликована</td>
-                    <td className="border px-2 py-1">В архив</td>
-                    <td className="border px-2 py-1">Архив</td>
+                    <td className="border px-2 py-1">{t('state.published')}</td>
+                    <td className="border px-2 py-1">{t('action.archive')}</td>
+                    <td className="border px-2 py-1">{t('state.archived')}</td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Снята с публикации</td>
-                    <td className="border px-2 py-1">Редактировать</td>
-                    <td className="border px-2 py-1">Черновик</td>
+                    <td className="border px-2 py-1">{t('state.unpublished')}</td>
+                    <td className="border px-2 py-1">{t('action.edit')}</td>
+                    <td className="border px-2 py-1">{t('state.draft')}</td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Снята с публикации</td>
-                    <td className="border px-2 py-1">В архив</td>
-                    <td className="border px-2 py-1">Архив</td>
+                    <td className="border px-2 py-1">{t('state.unpublished')}</td>
+                    <td className="border px-2 py-1">{t('action.archive')}</td>
+                    <td className="border px-2 py-1">{t('state.archived')}</td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Архив</td>
-                    <td className="border px-2 py-1">—</td>
-                    <td className="border px-2 py-1"></td>
-                  </tr>
-                  <tr className="bg-gray-200 font-semibold">
-                    <td className="border px-2 py-1" colSpan={3}>Модератор</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-2 py-1">Черновик</td>
-                    <td className="border px-2 py-1">—</td>
-                    <td className="border px-2 py-1"></td>
-                  </tr>
-                  <tr>
-                    <td className="border px-2 py-1">На модерации</td>
-                    <td className="border px-2 py-1">Одобрить</td>
-                    <td className="border px-2 py-1">Опубликована</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-2 py-1">На модерации</td>
-                    <td className="border px-2 py-1">Отклонить</td>
-                    <td className="border px-2 py-1">Отклонена</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-2 py-1">Отклонена</td>
-                    <td className="border px-2 py-1">—</td>
-                    <td className="border px-2 py-1"></td>
-                  </tr>
-                  <tr>
-                    <td className="border px-2 py-1">Опубликована</td>
-                    <td className="border px-2 py-1">Снять с публикации</td>
-                    <td className="border px-2 py-1">Снята с публикации</td>
-                  </tr>
-                  <tr>
-                    <td className="border px-2 py-1">Снята с публикации</td>
-                    <td className="border px-2 py-1">—</td>
-                    <td className="border px-2 py-1"></td>
-                  </tr>
-                  <tr>
-                    <td className="border px-2 py-1">Архив</td>
+                    <td className="border px-2 py-1">{t('state.archived')}</td>
                     <td className="border px-2 py-1">—</td>
                     <td className="border px-2 py-1"></td>
                   </tr>
                   <tr className="bg-gray-200 font-semibold">
-                    <td className="border px-2 py-1" colSpan={3}>Гость</td>
+                    <td className="border px-2 py-1" colSpan={3}>{t('role.moderator')}</td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Черновик</td>
+                    <td className="border px-2 py-1">{t('state.draft')}</td>
                     <td className="border px-2 py-1">—</td>
                     <td className="border px-2 py-1"></td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">На модерации</td>
+                    <td className="border px-2 py-1">{t('state.moderation')}</td>
+                    <td className="border px-2 py-1">{t('action.approve')}</td>
+                    <td className="border px-2 py-1">{t('state.published')}</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">{t('state.moderation')}</td>
+                    <td className="border px-2 py-1">{t('action.reject')}</td>
+                    <td className="border px-2 py-1">{t('state.rejected')}</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">{t('state.rejected')}</td>
                     <td className="border px-2 py-1">—</td>
                     <td className="border px-2 py-1"></td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Отклонена</td>
+                    <td className="border px-2 py-1">{t('state.published')}</td>
+                    <td className="border px-2 py-1">{t('action.unpublish')}</td>
+                    <td className="border px-2 py-1">{t('state.unpublished')}</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">{t('state.unpublished')}</td>
                     <td className="border px-2 py-1">—</td>
                     <td className="border px-2 py-1"></td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Опубликована</td>
+                    <td className="border px-2 py-1">{t('state.archived')}</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr className="bg-gray-200 font-semibold">
+                    <td className="border px-2 py-1" colSpan={3}>{t('role.guest')}</td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">{t('state.draft')}</td>
                     <td className="border px-2 py-1">—</td>
                     <td className="border px-2 py-1"></td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Снята с публикации</td>
+                    <td className="border px-2 py-1">{t('state.moderation')}</td>
                     <td className="border px-2 py-1">—</td>
                     <td className="border px-2 py-1"></td>
                   </tr>
                   <tr>
-                    <td className="border px-2 py-1">Архив</td>
+                    <td className="border px-2 py-1">{t('state.rejected')}</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">{t('state.published')}</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">{t('state.unpublished')}</td>
+                    <td className="border px-2 py-1">—</td>
+                    <td className="border px-2 py-1"></td>
+                  </tr>
+                  <tr>
+                    <td className="border px-2 py-1">{t('state.archived')}</td>
                     <td className="border px-2 py-1">—</td>
                     <td className="border px-2 py-1"></td>
                   </tr>
@@ -359,16 +361,16 @@ const InstructionsPanel: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="font-bold mb-2">3. Описание требований к статье</h3>
+            <h3 className="font-bold mb-2">{t('instructions.requirementsTitle')}</h3>
             <ul className="list-disc pl-5">
-              <li>Минимальное количество символов в заголовке: 5</li>
-              <li>Максимальное количество символов в заголовке: 100</li>
-              <li>Минимальное количество символов в содержании: 20</li>
-              <li>Максимальное количество символов в содержании: 1000</li>
-              <li>Максимально возможное количество статей: 10</li>
+              <li>{t('requirements.title')}</li>
+              <li>{t('requirements.titleMax')}</li>
+              <li>{t('requirements.content')}</li>
+              <li>{t('requirements.contentMax')}</li>
+              <li>{t('requirements.maxArticles')}</li>
             </ul>
             
-            <h4 className="font-medium mt-3 mb-2">Доступные категории статей:</h4>
+            <h4 className="font-medium mt-3 mb-2">{t('requirements.categories')}</h4>
             <ul className="list-disc pl-5">
               <li><strong>Technology</strong></li>
               <li><strong>Science</strong></li>
@@ -379,33 +381,26 @@ const InstructionsPanel: React.FC = () => {
           </div>
           
           <div>
-            <h3 className="font-bold mb-2">4. Вкладки (роли) и их назначение</h3>
+            <h3 className="font-bold mb-2">{t('instructions.tabsTitle')}</h3>
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold bg-gray-200 p-1">Пользователь 1 (Автор)</h4>
+                <h4 className="font-semibold bg-gray-200 p-1">{t('roleDesc.user')}</h4>
                 <ul className="list-disc pl-5 mt-1">
-                  <li>Создаёт, редактирует, удаляет черновик.</li>
-                  <li>Инициирует отправку черновика на модерацию.</li>
-                  <li>Может отправить статью в архив.</li>
-                  <li>Видит все свои статьи во всех статусах.</li>
+                  <li>{t('roleDesc.userDetail')}</li>
                 </ul>
               </div>
               
               <div>
-                <h4 className="font-semibold bg-gray-200 p-1">Модератор</h4>
+                <h4 className="font-semibold bg-gray-200 p-1">{t('roleDesc.moderator')}</h4>
                 <ul className="list-disc pl-5 mt-1">
-                  <li>Проверяет черновики статей в статусе "На модерации": может одобрить или отклонить.</li>
-                  <li>Может снять с публикации статью или отправить в архив.</li>
-                  <li>Видит статьи в статусах "На модерации", "Отклонена", "Опубликована", "Снята с публикации".</li>
+                  <li>{t('roleDesc.moderatorDetail')}</li>
                 </ul>
               </div>
               
               <div>
-                <h4 className="font-semibold bg-gray-200 p-1">Гость (Читатель)</h4>
+                <h4 className="font-semibold bg-gray-200 p-1">{t('roleDesc.guest')}</h4>
                 <ul className="list-disc pl-5 mt-1">
-                  <li>Имеет только права просмотра.</li>
-                  <li>Видит только статьи в статусе "Опубликована".</li>
-                  <li>Не может выполнять никаких действий.</li>
+                  <li>{t('roleDesc.guestDetail')}</li>
                 </ul>
               </div>
             </div>

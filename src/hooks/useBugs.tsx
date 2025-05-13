@@ -2,6 +2,7 @@
 import { useState, useCallback, useEffect, createContext, useContext, ReactNode } from 'react';
 import { Bug } from '@/types';
 import { toast } from "@/hooks/use-toast";
+import { useLanguage } from '@/hooks/useLanguage';
 
 const BUGS_STORAGE_KEY = 'qa-simulator-bugs';
 const BUGS_COUNT_KEY = 'qa-simulator-bugs-count';
@@ -10,35 +11,35 @@ const TOAST_TIMEOUT = 10000; // Auto-dismiss toast after 10 seconds
 // Reorder and make condition checks more specific
 export const PREDEFINED_BUGS: { 
   id: string;
-  description: string;
-  actionDescription: string;
+  descriptionKey: string;
+  actionDescriptionKey: string;
   conditionCheck: (fromStatus: string, action: string) => boolean;
 }[] = [
   // Place the most specific bugs first in the array
   {
     id: 'delete-unpublished-bug',
-    description: 'Обнаружен баг! Пользователь может удалить снятую с публикации статью',
-    actionDescription: 'Удаление снятой с публикации статьи пользователем',
+    descriptionKey: 'bug.deleteUnpublished',
+    actionDescriptionKey: 'bug.deleteUnpublishedAction',
     conditionCheck: (fromStatus, action) => fromStatus === 'unpublished' && action === 'delete'
   },
   {
     id: 'short-title-bug',
-    description: 'Обнаружен баг! Заголовок статьи меньше 5 символов.',
-    actionDescription: 'Создание статьи с коротким заголовком',
+    descriptionKey: 'bug.shortTitle',
+    actionDescriptionKey: 'bug.shortTitleAction',
     // Only trigger for form submission actions, not for article status changes
     conditionCheck: (fromStatus, action) => action === 'create' || action === 'edit'
   },
   {
     id: 'archived-article-bug',
-    description: 'Баг обнаружен. Статья в статусе Архив доступна для просмотра другим пользователям.',
-    actionDescription: 'Просмотр статьи в статусе Архив',
+    descriptionKey: 'bug.archivedView',
+    actionDescriptionKey: 'bug.archivedViewAction',
     // Only trigger for archived viewing checks
     conditionCheck: (fromStatus, action) => action === 'view' && fromStatus === 'archived'
   },
   {
     id: 'save-without-changes-bug',
-    description: 'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
-    actionDescription: 'Сохранение статьи без внесения изменений',
+    descriptionKey: 'bug.saveUnchanged',
+    actionDescriptionKey: 'bug.saveUnchangedAction',
     // Only trigger for save actions
     conditionCheck: (fromStatus, action) => action === 'save-unchanged'
   }
@@ -78,6 +79,7 @@ export const useBugs = () => {
 function useBugsState() {
   const [foundBugs, setFoundBugs] = useState<Bug[]>([]);
   const [bugsCount, setBugsCount] = useState(0);
+  const { t } = useLanguage();
 
   // Загружаем сохраненные баги при инициализации
   useEffect(() => {
@@ -145,7 +147,7 @@ function useBugsState() {
       // Добавляем небольшую задержку для гарантии запуска после обновления состояния
       setTimeout(() => {
         toast({
-          title: "Поздравляем! Баг найден!",
+          title: t('toast.bugFound'),
           description,
           variant: "destructive", 
           duration: TOAST_TIMEOUT,
@@ -157,7 +159,7 @@ function useBugsState() {
       console.log(`Bug ${bugId} already found, not adding again`);
       return false;
     }
-  }, [foundBugs]);
+  }, [foundBugs, t]);
 
   // Функция для проверки багов на основе действий - improved with better logging
   const checkActionForBug = useCallback((fromStatus: string, action: string): boolean => {
@@ -171,18 +173,18 @@ function useBugsState() {
       
       // If we found a matching bug that hasn't been found yet, register it
       if (matches && !alreadyFound) {
-        console.log(`Found matching bug: ${bug.id} with description: ${bug.description}`);
+        console.log(`Found matching bug: ${bug.id} with description: ${t(bug.descriptionKey)}`);
         return checkForBug(
           bug.id, 
-          bug.description, 
-          bug.actionDescription
+          t(bug.descriptionKey), 
+          t(bug.actionDescriptionKey)
         );
       }
     }
     
     console.log(`No matching bug found for status='${fromStatus}', action='${action}'`);
     return false;
-  }, [foundBugs, checkForBug]);
+  }, [foundBugs, checkForBug, t]);
 
   const resetBugs = useCallback(() => {
     setFoundBugs([]);
@@ -190,10 +192,10 @@ function useBugsState() {
     localStorage.removeItem(BUGS_STORAGE_KEY);
     localStorage.removeItem(BUGS_COUNT_KEY);
     toast({
-      title: "Прогресс сброшен",
-      description: "Счетчик багов и список найденных багов очищены",
+      title: t('toast.progressReset'),
+      description: t('toast.resetDescription'),
     });
-  }, []);
+  }, [t]);
 
   return {
     foundBugs,
