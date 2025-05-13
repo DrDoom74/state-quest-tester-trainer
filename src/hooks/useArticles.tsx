@@ -1,8 +1,10 @@
+
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
 import { useBugs } from './useBugs';
 import { toast } from "@/hooks/use-toast";
+import { useLanguage } from '@/hooks/useLanguage';
 
 const ARTICLES_STORAGE_KEY = 'qa-simulator-articles';
 const MAX_ARTICLES = 10;
@@ -58,6 +60,7 @@ export function useArticles() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [activeRole, setActiveRole] = useState<UserRole>('user');
   const { checkActionForBug } = useBugs();
+  const { t } = useLanguage();
 
   useEffect(() => {
     // Load articles from localStorage
@@ -89,8 +92,8 @@ export function useArticles() {
   ): Article | null => {
     if (articles.length >= MAX_ARTICLES) {
       toast({
-        title: "Достигнут лимит статей",
-        description: "Вы не можете создать более 10 статей одновременно.",
+        title: t('articles.limit'),
+        description: t('toast.articleLimitDesc'),
         variant: "destructive"
       });
       return null;
@@ -108,7 +111,7 @@ export function useArticles() {
 
     setArticles(prev => [...prev, newArticle]);
     return newArticle;
-  }, [articles]);
+  }, [articles, t]);
 
   const updateArticle = useCallback((
     id: string, 
@@ -145,8 +148,8 @@ export function useArticles() {
       
       if (!validActions.includes(action)) {
         toast({
-          title: "Действие недоступно",
-          description: `Нельзя выполнить "${action}" в текущем статусе "${article.status}" с ролью ${activeRole}`,
+          title: t('toast.actionUnavailable'),
+          description: t('toast.actionUnavailableDesc').replace('{{action}}', action).replace('{{status}}', article.status).replace('{{role}}', activeRole),
           variant: "destructive"
         });
         return prev;
@@ -186,15 +189,15 @@ export function useArticles() {
     });
     
     return success;
-  }, [activeRole, checkActionForBug]);
+  }, [activeRole, checkActionForBug, t]);
 
   const clearAllArticles = useCallback(() => {
     setArticles([]);
     toast({
-      title: "Блог очищен",
-      description: "Все статьи были удалены",
+      title: t('toast.blogCleared'),
+      description: t('toast.blogClearedDesc'),
     });
-  }, []);
+  }, [t]);
 
   const getVisibleArticles = useCallback(() => {
     return articles.filter(article => 

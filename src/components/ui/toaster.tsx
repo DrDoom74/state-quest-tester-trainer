@@ -12,7 +12,7 @@ import { useLanguage } from "@/hooks/useLanguage"
 
 export function Toaster() {
   const { toasts } = useToast()
-  const { t } = useLanguage();
+  const { language } = useLanguage();
 
   return (
     <ToastProvider>
@@ -34,4 +34,3 @@ export function Toaster() {
     </ToastProvider>
   )
 }
-

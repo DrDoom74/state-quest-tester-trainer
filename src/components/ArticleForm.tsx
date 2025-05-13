@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "@/hooks/use-toast";
 import { XIcon } from 'lucide-react';
 import { useBugs } from '@/hooks/useBugs';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface ArticleFormProps {
   article?: Article;
@@ -36,6 +37,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   const initialRender = useRef(true);
   
   const { checkForBug } = useBugs();
+  const { t } = useLanguage();
   
   const isEditing = !!article;
 
@@ -61,21 +63,21 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     let isValid = true;
     
     if (!title.trim()) {
-      newErrors.title = 'Заголовок обязателен';
+      newErrors.title = t('form.error.titleRequired');
       isValid = false;
     } else if (title.length > 100) {
-      newErrors.title = 'Заголовок не должен превышать 100 символов';
+      newErrors.title = t('form.error.titleTooLong');
       isValid = false;
     }
     
     if (!content.trim()) {
-      newErrors.content = 'Текст статьи обязателен';
+      newErrors.content = t('form.error.contentRequired');
       isValid = false;
     } else if (content.length < 20) {
-      newErrors.content = 'Текст статьи должен содержать не менее 20 символов';
+      newErrors.content = t('form.error.contentTooShort');
       isValid = false;
     } else if (content.length > MAX_CONTENT_LENGTH) {
-      newErrors.content = `Текст статьи не должен превышать ${MAX_CONTENT_LENGTH} символов`;
+      newErrors.content = t('form.error.contentTooLong').replace('{{max}}', MAX_CONTENT_LENGTH.toString());
       isValid = false;
     }
     
@@ -83,26 +85,23 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     return isValid;
   };
 
-  // Улучшенное определение бага с выделением в отдельную переменную
   const detectBug = () => {
     if (isEditing && !hasChanges) {
       console.log("Detecting save without changes bug!");
       
-      // Вызываем checkForBug с небольшой задержкой, чтобы гарантировать корректное отображение toast
       setTimeout(() => {
         const bugDetected = checkForBug(
           'save-without-changes-bug',
-          'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
-          'Сохранение статьи без внесения изменений'
+          t('bug.saveUnchanged'),
+          t('bug.saveUnchangedAction')
         );
         
         console.log("Bug detection result:", bugDetected);
         
-        // Использование прямого вызова toast для усиления эффекта
         if (bugDetected) {
           toast({
-            title: "Поздравляем! Баг найден!",
-            description: 'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
+            title: t('toast.bugFound'),
+            description: t('bug.saveUnchanged'),
             variant: "destructive",
             duration: 10000,
           });
@@ -128,8 +127,8 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       
       if (!validate()) {
         toast({
-          title: "Ошибка валидации",
-          description: "Пожалуйста, исправьте ошибки в форме",
+          title: t('form.error.validationFailed'),
+          description: t('form.error.fixErrors'),
           variant: "destructive"
         });
         setIsSubmitting(false);
@@ -141,8 +140,8 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
     } catch (error) {
       console.error("Error during form submission:", error);
       toast({
-        title: "Ошибка",
-        description: "Произошла ошибка при сохранении статьи",
+        title: t('form.error.title'),
+        description: t('form.error.description'),
         variant: "destructive"
       });
       setIsSubmitting(false);
@@ -153,7 +152,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold">
-            {isEditing ? 'Редактирование статьи' : 'Создание новой статьи'}
+            {isEditing ? t('form.editArticle') : t('form.createArticle')}
           </h2>
           <Button variant="ghost" size="icon" onClick={onCancel}>
             <XIcon className="h-5 w-5" />
@@ -162,19 +161,19 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">Заголовок <span className="text-red-500">*</span></Label>
-            <Input id="title" placeholder="Введите заголовок статьи" value={title} onChange={e => setTitle(e.target.value)} className={errors.title ? "border-red-500" : ""} />
+            <Label htmlFor="title">{t('form.titleLabel')} <span className="text-red-500">*</span></Label>
+            <Input id="title" placeholder={t('form.titlePlaceholder')} value={title} onChange={e => setTitle(e.target.value)} className={errors.title ? "border-red-500" : ""} />
             {errors.title && <div className="text-red-500 text-sm mt-1">{errors.title}</div>}
             <div className="text-xs text-gray-500">
-              {title.length}/100 символов
+              {title.length}/100 {t('form.characters')}
             </div>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="category">Категория <span className="text-red-500">*</span></Label>
+            <Label htmlFor="category">{t('form.categoryLabel')} <span className="text-red-500">*</span></Label>
             <Select value={category} onValueChange={value => setCategory(value as ArticleCategory)}>
               <SelectTrigger>
-                <SelectValue placeholder="Выберите категорию" />
+                <SelectValue placeholder={t('form.categoryPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
                 {CATEGORIES.map(cat => <SelectItem key={cat} value={cat}>
@@ -185,24 +184,24 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="content">Текст статьи <span className="text-red-500">*</span></Label>
-            <Textarea id="content" placeholder="Введите текст статьи" value={content} onChange={e => setContent(e.target.value)} className={`min-h-[150px] ${errors.content ? "border-red-500" : ""}`} />
+            <Label htmlFor="content">{t('form.contentLabel')} <span className="text-red-500">*</span></Label>
+            <Textarea id="content" placeholder={t('form.contentPlaceholder')} value={content} onChange={e => setContent(e.target.value)} className={`min-h-[150px] ${errors.content ? "border-red-500" : ""}`} />
             {errors.content && <div className="text-red-500 text-sm mt-1">{errors.content}</div>}
             <div className="text-xs text-gray-500">
-              {content.length}/{MAX_CONTENT_LENGTH} символов (минимум 20, максимум {MAX_CONTENT_LENGTH})
+              {content.length}/{MAX_CONTENT_LENGTH} {t('form.characters')} ({t('form.min')} 20, {t('form.max')} {MAX_CONTENT_LENGTH})
             </div>
           </div>
           
           <div className="flex justify-end space-x-2 pt-4">
             <Button type="button" variant="outline" onClick={onCancel}>
-              Отмена
+              {t('form.cancel')}
             </Button>
             <Button 
               type="submit" 
               className="text-base"
               disabled={isSubmitting}
             >
-              {isEditing ? 'Сохранить изменения' : 'Создать статью'}
+              {isEditing ? t('form.saveChanges') : t('form.create')}
             </Button>
           </div>
         </form>

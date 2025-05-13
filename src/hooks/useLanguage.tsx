@@ -95,6 +95,11 @@ const translations: Record<Language, Record<string, string>> = {
     'toast.rejectedDesc': 'Статья была отклонена модератором',
     'toast.archived': 'Статья в архиве',
     'toast.archivedDesc': 'Статья перемещена в архив',
+    'toast.actionUnavailable': 'Действие недоступно',
+    'toast.actionUnavailableDesc': 'Нельзя выполнить "{{action}}" в текущем статусе "{{status}}" с ролью {{role}}',
+    'toast.blogCleared': 'Блог очищен',
+    'toast.blogClearedDesc': 'Все статьи были удалены',
+    'toast.articleLimitDesc': 'Вы не можете создать более 10 статей одновременно.',
 
     // Article view
     'article.view': 'Просмотр статьи',
@@ -105,6 +110,8 @@ const translations: Record<Language, Record<string, string>> = {
     'article.created': 'Создано:',
     'article.updated': 'Обновлено:',
     'article.close': 'Закрыть',
+    'article.id': 'ID',
+    'article.edited': 'Статья была отредактирована',
 
     // Role description
     'roleDesc.user': 'Пользователь 1 (Автор)',
@@ -124,10 +131,21 @@ const translations: Record<Language, Record<string, string>> = {
     'bug.saveUnchanged': 'Обнаружен баг! Кнопка сохранить изменения доступна без внесения изменений в статью',
     'bug.saveUnchangedAction': 'Сохранение статьи без внесения изменений',
 
+    // Form validation messages
+    'form.error.titleRequired': 'Заголовок обязателен',
+    'form.error.titleTooLong': 'Заголовок не должен превышать 100 символов',
+    'form.error.contentRequired': 'Текст статьи обязателен',
+    'form.error.contentTooShort': 'Текст статьи должен содержать не менее 20 символов',
+    'form.error.contentTooLong': 'Текст статьи не должен превышать {{max}} символов',
+    'form.error.validationFailed': 'Ошибка валидации',
+    'form.error.fixErrors': 'Пожалуйста, исправьте ошибки в форме',
+    'form.error.title': 'Ошибка',
+    'form.error.description': 'Произошла ошибка при сохранении статьи',
+    
     // Article form
-    'form.createArticle': 'Создать статью',
-    'form.editArticle': 'Редактировать статью',
-    'form.titleLabel': 'Заголовок статьи',
+    'form.createArticle': 'Создание новой статьи',
+    'form.editArticle': 'Редактирование статьи',
+    'form.titleLabel': 'Заголовок',
     'form.titlePlaceholder': 'Введите заголовок статьи',
     'form.categoryLabel': 'Категория',
     'form.categoryPlaceholder': 'Выберите категорию',
@@ -135,6 +153,11 @@ const translations: Record<Language, Record<string, string>> = {
     'form.contentPlaceholder': 'Введите текст статьи',
     'form.save': 'Сохранить',
     'form.cancel': 'Отмена',
+    'form.saveChanges': 'Сохранить изменения',
+    'form.create': 'Создать статью',
+    'form.characters': 'символов',
+    'form.min': 'минимум',
+    'form.max': 'максимум',
   },
   en: {
     // Header
@@ -215,6 +238,11 @@ const translations: Record<Language, Record<string, string>> = {
     'toast.rejectedDesc': 'Article was rejected by the moderator',
     'toast.archived': 'Article archived',
     'toast.archivedDesc': 'Article moved to archive',
+    'toast.actionUnavailable': 'Action unavailable',
+    'toast.actionUnavailableDesc': 'Cannot perform "{{action}}" in current status "{{status}}" with role {{role}}',
+    'toast.blogCleared': 'Blog cleared',
+    'toast.blogClearedDesc': 'All articles have been removed',
+    'toast.articleLimitDesc': 'You cannot create more than 10 articles at once.',
 
     // Article view
     'article.view': 'Article View',
@@ -225,6 +253,8 @@ const translations: Record<Language, Record<string, string>> = {
     'article.created': 'Created:',
     'article.updated': 'Updated:',
     'article.close': 'Close',
+    'article.id': 'ID',
+    'article.edited': 'Article was edited',
 
     // Role description
     'roleDesc.user': 'User 1 (Author)',
@@ -244,17 +274,33 @@ const translations: Record<Language, Record<string, string>> = {
     'bug.saveUnchanged': 'Bug found! Save changes button is available without making changes to the article',
     'bug.saveUnchangedAction': 'Saving an article without making changes',
 
+    // Form validation messages
+    'form.error.titleRequired': 'Title is required',
+    'form.error.titleTooLong': 'Title should not exceed 100 characters',
+    'form.error.contentRequired': 'Content is required',
+    'form.error.contentTooShort': 'Content should be at least 20 characters',
+    'form.error.contentTooLong': 'Content should not exceed {{max}} characters',
+    'form.error.validationFailed': 'Validation error',
+    'form.error.fixErrors': 'Please fix the errors in the form',
+    'form.error.title': 'Error',
+    'form.error.description': 'An error occurred while saving the article',
+    
     // Article form
-    'form.createArticle': 'Create Article',
+    'form.createArticle': 'Create New Article',
     'form.editArticle': 'Edit Article',
-    'form.titleLabel': 'Article Title',
+    'form.titleLabel': 'Title',
     'form.titlePlaceholder': 'Enter article title',
     'form.categoryLabel': 'Category',
     'form.categoryPlaceholder': 'Select a category',
-    'form.contentLabel': 'Article Content',
+    'form.contentLabel': 'Content',
     'form.contentPlaceholder': 'Enter article content',
     'form.save': 'Save',
     'form.cancel': 'Cancel',
+    'form.saveChanges': 'Save Changes',
+    'form.create': 'Create Article',
+    'form.characters': 'characters',
+    'form.min': 'min',
+    'form.max': 'max',
   }
 };
 
