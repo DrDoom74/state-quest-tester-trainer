@@ -113,11 +113,11 @@ const translations: Record<Language, Record<string, string>> = {
     'article.id': 'ID',
     'article.edited': 'Статья была отредактирована',
 
-    // Role description
+    // Role description - обновленные описания с ненумерованными списками
     'roleDesc.user': 'Пользователь 1 (Автор)',
     'roleDesc.userDetail': 'Создаёт, редактирует, удаляет черновик. Инициирует отправку черновика на модерацию. Может отправить статью в архив. Видит все свои статьи во всех статусах.',
     'roleDesc.moderator': 'Модератор',
-    'roleDesc.moderatorDetail': 'Проверяет черновики статей в статусе "На модерации": может одобрить или отклонить. Может снять с публикации статью или отправить в архив. Видит статьи в статусах "На модерации", "Отклонена", "Опубликована", "Снята с публикации".',
+    'roleDesc.moderatorDetail': 'Проверяет черновики статей в статусе "На модерации": может одобрить или отклонить. Может снять с публикации статью. Видит статьи в статусах "На модерации", "Отклонена", "Опубликована", "Снята с публикации".',
     'roleDesc.guest': 'Гость (Читатель)',
     'roleDesc.guestDetail': 'Имеет только права просмотра. Видит только статьи в статусе "Опубликована". Не может выполнять никаких действий.',
 
@@ -256,11 +256,11 @@ const translations: Record<Language, Record<string, string>> = {
     'article.id': 'ID',
     'article.edited': 'Article was edited',
 
-    // Role description
+    // Role description - обновленные описания с ненумерованными списками
     'roleDesc.user': 'User 1 (Author)',
     'roleDesc.userDetail': 'Creates, edits, deletes drafts. Initiates sending drafts for moderation. Can archive articles. Sees all their articles in all statuses.',
     'roleDesc.moderator': 'Moderator',
-    'roleDesc.moderatorDetail': 'Reviews article drafts in "Under Moderation" status: can approve or reject. Can unpublish an article or archive it. Sees articles in "Under Moderation", "Rejected", "Published", "Unpublished" statuses.',
+    'roleDesc.moderatorDetail': 'Reviews article drafts in "Under Moderation" status: can approve or reject. Can unpublish an article. Sees articles in "Under Moderation", "Rejected", "Published", "Unpublished" statuses.',
     'roleDesc.guest': 'Guest (Reader)',
     'roleDesc.guestDetail': 'Has view-only rights. Sees only articles in "Published" status. Cannot perform any actions.',
 

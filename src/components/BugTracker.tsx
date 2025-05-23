@@ -42,9 +42,9 @@ const BugTracker: React.FC<BugTrackerProps> = ({ bugs }) => {
             <ul className="space-y-3">
               {bugs.map(bug => (
                 <li key={bug.id} className="border-l-4 border-red-500 pl-3 py-1">
-                  <div className="font-medium text-red-700">{bug.description}</div>
+                  <div className="font-medium text-red-700">{t(bug.description)}</div>
                   <div className="text-sm text-gray-600">
-                    <span className="font-medium">{t('bugs.reproduction')}</span> {bug.actionDescription}
+                    <span className="font-medium">{t('bugs.reproduction')}</span> {t(bug.actionDescription)}
                   </div>
                   <div className="text-xs text-gray-500 mt-1">
                     {t('bugs.foundTime')} {formatDateWithLocale(bug.dateFound, language)}

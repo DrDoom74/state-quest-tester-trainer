@@ -49,7 +49,7 @@ export const PREDEFINED_BUGS: {
 interface BugsContextType {
   foundBugs: Bug[];
   bugsCount: number;
-  checkForBug: (bugId: string, description: string, actionDescription: string) => boolean;
+  checkForBug: (bugId: string, descriptionKey: string, actionDescriptionKey: string) => boolean;
   checkActionForBug: (fromStatus: string, action: string) => boolean;
   resetBugs: () => void;
 }
@@ -109,18 +109,18 @@ function useBugsState() {
   }, []);
 
   // Основная функция для регистрации бага с правильной синхронизацией и отображением тоста
-  const checkForBug = useCallback((bugId: string, description: string, actionDescription: string): boolean => {
+  const checkForBug = useCallback((bugId: string, descriptionKey: string, actionDescriptionKey: string): boolean => {
     console.log(`Checking for bug: ${bugId}, already found bugs:`, foundBugs.map(b => b.id));
     
     // Проверяем, был ли баг уже найден
     if (!foundBugs.some(found => found.id === bugId)) {
       console.log(`Bug ${bugId} not found yet, adding to found bugs`);
       
-      // Создаем новый объект бага
+      // Создаем новый объект бага с ключами переводов
       const newBug: Bug = {
         id: bugId,
-        description,
-        actionDescription,
+        description: descriptionKey, // Сохраняем ключ перевода
+        actionDescription: actionDescriptionKey, // Сохраняем ключ перевода
         dateFound: new Date()
       };
       
@@ -148,7 +148,7 @@ function useBugsState() {
       setTimeout(() => {
         toast({
           title: t('toast.bugFound'),
-          description,
+          description: t(descriptionKey), // Переводим описание для toast
           variant: "destructive", 
           duration: TOAST_TIMEOUT,
         });
@@ -176,8 +176,8 @@ function useBugsState() {
         console.log(`Found matching bug: ${bug.id} with description: ${t(bug.descriptionKey)}`);
         return checkForBug(
           bug.id, 
-          t(bug.descriptionKey), 
-          t(bug.actionDescriptionKey)
+          bug.descriptionKey, // Передаем ключ перевода
+          bug.actionDescriptionKey // Передаем ключ перевода
         );
       }
     }

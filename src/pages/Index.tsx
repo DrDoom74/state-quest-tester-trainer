@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
@@ -56,11 +55,9 @@ const Index = () => {
       if (article.status === 'archived' && activeRole !== 'user') {
         checkForBug(
           'archived-article-bug', 
-          t('bug.archivedView'), 
-          t('bug.archivedViewAction')
+          'bug.archivedView', // Передаем ключ перевода
+          'bug.archivedViewAction' // Передаем ключ перевода
         );
-        // Alternative approach using checkActionForBug
-        // checkActionForBug('archived', 'view');
       }
       setViewArticle(article);
     }
@@ -77,8 +74,8 @@ const Index = () => {
         console.log("Checking for short title bug");
         checkForBug(
           'short-title-bug', 
-          t('bug.shortTitle'), 
-          t('bug.shortTitleAction')
+          'bug.shortTitle', // Передаем ключ перевода
+          'bug.shortTitleAction' // Передаем ключ перевода
         );
       }, 50);
     }
