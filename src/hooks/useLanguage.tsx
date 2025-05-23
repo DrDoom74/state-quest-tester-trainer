@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 // Define available languages
@@ -113,13 +112,20 @@ const translations: Record<Language, Record<string, string>> = {
     'article.id': 'ID',
     'article.edited': 'Статья была отредактирована',
 
-    // Role description - обновленные описания с ненумерованными списками
+    // Role description - updated to separate list items
     'roleDesc.user': 'Пользователь 1 (Автор)',
-    'roleDesc.userDetail': 'Создаёт, редактирует, удаляет черновик. Инициирует отправку черновика на модерацию. Может отправить статью в архив. Видит все свои статьи во всех статусах.',
+    'roleDesc.user.1': 'Создаёт, редактирует, удаляет черновик.',
+    'roleDesc.user.2': 'Инициирует отправку черновика на модерацию.',
+    'roleDesc.user.3': 'Может отправить статью в архив.',
+    'roleDesc.user.4': 'Видит все свои статьи во всех статусах.',
     'roleDesc.moderator': 'Модератор',
-    'roleDesc.moderatorDetail': 'Проверяет черновики статей в статусе "На модерации": может одобрить или отклонить. Может снять с публикации статью. Видит статьи в статусах "На модерации", "Отклонена", "Опубликована", "Снята с публикации".',
+    'roleDesc.moderator.1': 'Проверяет черновики статей в статусе "На модерации": может одобрить или отклонить.',
+    'roleDesc.moderator.2': 'Может снять с публикации статью.',
+    'roleDesc.moderator.3': 'Видит статьи в статусах "На модерации", "Отклонена", "Опубликована", "Снята с публикации".',
     'roleDesc.guest': 'Гость (Читатель)',
-    'roleDesc.guestDetail': 'Имеет только права просмотра. Видит только статьи в статусе "Опубликована". Не может выполнять никаких действий.',
+    'roleDesc.guest.1': 'Имеет только права просмотра.',
+    'roleDesc.guest.2': 'Видит только статьи в статусе "Опубликована".',
+    'roleDesc.guest.3': 'Не может выполнять никаких действий.',
 
     // Bug descriptions 
     'bug.deleteUnpublished': 'Обнаружен баг! Пользователь может удалить снятую с публикации статью',
@@ -256,13 +262,20 @@ const translations: Record<Language, Record<string, string>> = {
     'article.id': 'ID',
     'article.edited': 'Article was edited',
 
-    // Role description - обновленные описания с ненумерованными списками
+    // Role description - updated to separate list items
     'roleDesc.user': 'User 1 (Author)',
-    'roleDesc.userDetail': 'Creates, edits, deletes drafts. Initiates sending drafts for moderation. Can archive articles. Sees all their articles in all statuses.',
+    'roleDesc.user.1': 'Creates, edits, deletes drafts.',
+    'roleDesc.user.2': 'Initiates sending drafts for moderation.',
+    'roleDesc.user.3': 'Can archive articles.',
+    'roleDesc.user.4': 'Sees all their articles in all statuses.',
     'roleDesc.moderator': 'Moderator',
-    'roleDesc.moderatorDetail': 'Reviews article drafts in "Under Moderation" status: can approve or reject. Can unpublish an article. Sees articles in "Under Moderation", "Rejected", "Published", "Unpublished" statuses.',
+    'roleDesc.moderator.1': 'Reviews article drafts in "Under Moderation" status: can approve or reject.',
+    'roleDesc.moderator.2': 'Can unpublish an article.',
+    'roleDesc.moderator.3': 'Sees articles in "Under Moderation", "Rejected", "Published", "Unpublished" statuses.',
     'roleDesc.guest': 'Guest (Reader)',
-    'roleDesc.guestDetail': 'Has view-only rights. Sees only articles in "Published" status. Cannot perform any actions.',
+    'roleDesc.guest.1': 'Has view-only rights.',
+    'roleDesc.guest.2': 'Sees only articles in "Published" status.',
+    'roleDesc.guest.3': 'Cannot perform any actions.',
 
     // Bug descriptions
     'bug.deleteUnpublished': 'Bug found! User can delete an unpublished article',

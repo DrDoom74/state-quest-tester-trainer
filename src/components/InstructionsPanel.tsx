@@ -385,21 +385,28 @@ const InstructionsPanel: React.FC = () => {
               <div>
                 <h4 className="font-semibold bg-gray-200 p-1">{t('roleDesc.user')}</h4>
                 <ul className="list-disc pl-5 mt-1">
-                  <li>{t('roleDesc.userDetail')}</li>
+                  <li>{t('roleDesc.user.1')}</li>
+                  <li>{t('roleDesc.user.2')}</li>
+                  <li>{t('roleDesc.user.3')}</li>
+                  <li>{t('roleDesc.user.4')}</li>
                 </ul>
               </div>
               
               <div>
                 <h4 className="font-semibold bg-gray-200 p-1">{t('roleDesc.moderator')}</h4>
                 <ul className="list-disc pl-5 mt-1">
-                  <li>{t('roleDesc.moderatorDetail')}</li>
+                  <li>{t('roleDesc.moderator.1')}</li>
+                  <li>{t('roleDesc.moderator.2')}</li>
+                  <li>{t('roleDesc.moderator.3')}</li>
                 </ul>
               </div>
               
               <div>
                 <h4 className="font-semibold bg-gray-200 p-1">{t('roleDesc.guest')}</h4>
                 <ul className="list-disc pl-5 mt-1">
-                  <li>{t('roleDesc.guestDetail')}</li>
+                  <li>{t('roleDesc.guest.1')}</li>
+                  <li>{t('roleDesc.guest.2')}</li>
+                  <li>{t('roleDesc.guest.3')}</li>
                 </ul>
               </div>
             </div>
