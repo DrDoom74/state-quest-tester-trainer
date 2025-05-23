@@ -27,7 +27,7 @@ const Index = () => {
     canCreateMore 
   } = useArticles();
   
-  const { foundBugs, bugsCount, resetBugs, checkForBug } = useBugs();
+  const { foundBugs, bugsCount, resetBugs, checkActionForBug } = useBugs();
   const { t } = useLanguage();
   
   const [showForm, setShowForm] = useState(false);
@@ -51,14 +51,8 @@ const Index = () => {
   const handleViewArticle = (id: string) => {
     const article = articles.find(a => a.id === id);
     if (article) {
-      // Check for archived article bug - improved to use proper action parameter
-      if (article.status === 'archived' && activeRole !== 'user') {
-        checkForBug(
-          'archived-article-bug', 
-          'bug.archivedView', // Передаем ключ перевода
-          'bug.archivedViewAction' // Передаем ключ перевода
-        );
-      }
+      // Check for archived article bug using checkActionForBug
+      checkActionForBug('archived', 'view');
       setViewArticle(article);
     }
   };
@@ -66,17 +60,13 @@ const Index = () => {
   const handleFormSubmit = (title: string, content: string, category: ArticleCategory) => {
     console.log(`Submitting form with title: "${title}" (length: ${title.length})`);
     
-    // Check for bug with short title before doing anything else
+    // Check for bug with short title using checkActionForBug
     if (title.length < 5) {
       console.log("Detected short title bug!");
-      // Force this to run after the current render cycle with a slightly longer timeout
+      // Use checkActionForBug for consistency
       setTimeout(() => {
         console.log("Checking for short title bug");
-        checkForBug(
-          'short-title-bug', 
-          'bug.shortTitle', // Передаем ключ перевода
-          'bug.shortTitleAction' // Передаем ключ перевода
-        );
+        checkActionForBug('', 'create');
       }, 50);
     }
 
