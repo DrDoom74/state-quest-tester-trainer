@@ -36,7 +36,7 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const initialRender = useRef(true);
   
-  const { checkForBug } = useBugs();
+  const { checkActionForBug } = useBugs();
   const { t } = useLanguage();
   
   const isEditing = !!article;
@@ -90,22 +90,8 @@ const ArticleForm: React.FC<ArticleFormProps> = ({
       console.log("Detecting save without changes bug!");
       
       setTimeout(() => {
-        const bugDetected = checkForBug(
-          'save-without-changes-bug',
-          t('bug.saveUnchanged'),
-          t('bug.saveUnchangedAction')
-        );
-        
-        console.log("Bug detection result:", bugDetected);
-        
-        if (bugDetected) {
-          toast({
-            title: t('toast.bugFound'),
-            description: t('bug.saveUnchanged'),
-            variant: "destructive",
-            duration: 10000,
-          });
-        }
+        console.log("Checking for save-unchanged bug using checkActionForBug");
+        checkActionForBug('', 'save-unchanged');
       }, 10);
       
       return true;
