@@ -52,7 +52,7 @@ const ACTION_RESULTS: Record<ActionType, (status: ArticleStatus) => ArticleStatu
 export const ARTICLE_VISIBILITY: Record<UserRole, ArticleStatus[]> = {
   user: ['draft', 'moderation', 'rejected', 'published', 'unpublished', 'archived'],
   moderator: ['moderation', 'rejected', 'published', 'unpublished'],
-  guest: ['published'], // Removed 'archived' to trigger the bug when guests try to view archived articles
+  guest: ['published', 'archived'], // Restored archived visibility for guests to trigger the bug
 };
 
 export function useArticles() {

@@ -51,12 +51,12 @@ const Index = () => {
   const handleViewArticle = (id: string) => {
     const article = articles.find(a => a.id === id);
     if (article) {
-      // Check for archived article bug only if the current role shouldn't have access
-      if (article.status === 'archived' && !ARTICLE_VISIBILITY[activeRole].includes('archived')) {
-        console.log(`Bug check: ${activeRole} trying to view archived article (not allowed)`);
+      // Check for archived article bug when guest tries to view archived article
+      if (article.status === 'archived' && activeRole === 'guest') {
+        console.log(`Bug check: ${activeRole} trying to view archived article (should trigger bug)`);
         checkActionForBug('archived', 'view');
       } else {
-        console.log(`No bug: ${activeRole} viewing archived article is allowed or article is not archived`);
+        console.log(`No bug: ${activeRole} viewing article with status ${article.status}`);
       }
       setViewArticle(article);
     }
