@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from 'react';
 import { Article, ArticleStatus, ActionType, ArticleCategory, UserRole } from '@/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -53,7 +52,7 @@ const ACTION_RESULTS: Record<ActionType, (status: ArticleStatus) => ArticleStatu
 export const ARTICLE_VISIBILITY: Record<UserRole, ArticleStatus[]> = {
   user: ['draft', 'moderation', 'rejected', 'published', 'unpublished', 'archived'],
   moderator: ['moderation', 'rejected', 'published', 'unpublished'],
-  guest: ['published', 'archived'], // Added archived to be visible for guest to trigger the bug
+  guest: ['published'], // Removed 'archived' to trigger the bug when guests try to view archived articles
 };
 
 export function useArticles() {
