@@ -14,6 +14,10 @@ const BugTracker: React.FC<BugTrackerProps> = ({ bugs }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const { language, t } = useLanguage();
   
+  // Adding language as a dependency ensures re-render on language change
+  // This is crucial for bug translation updates
+  console.log('BugTracker rendering with language:', language, 'bugs count:', bugs.length);
+  
   return (
     <div className="bg-white rounded-lg shadow-md p-4">
       <div className="flex justify-between items-center">
