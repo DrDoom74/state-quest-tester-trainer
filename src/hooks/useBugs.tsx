@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect, createContext, useContext, ReactNode } from 'react';
 import { Bug } from '@/types';
 import { toast } from "@/hooks/use-toast";
@@ -33,7 +32,8 @@ export const PREDEFINED_BUGS: {
     id: 'archived-article-bug',
     descriptionKey: 'bug.archivedView',
     actionDescriptionKey: 'bug.archivedViewAction',
-    // Only trigger for archived viewing checks
+    // Only trigger for archived viewing checks when access should be forbidden
+    // This bug should only trigger when a role tries to view archived content they shouldn't access
     conditionCheck: (fromStatus, action) => action === 'view' && fromStatus === 'archived'
   },
   {

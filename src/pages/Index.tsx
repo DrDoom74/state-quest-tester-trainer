@@ -6,7 +6,7 @@ import ArticleList from '@/components/ArticleList';
 import BugTracker from '@/components/BugTracker';
 import ArticleForm from '@/components/ArticleForm';
 import ArticleView from '@/components/ArticleView';
-import { useArticles } from '@/hooks/useArticles';
+import { useArticles, ARTICLE_VISIBILITY } from '@/hooks/useArticles';
 import { useBugs } from '@/hooks/useBugs';
 import { Article, ArticleCategory, UserRole } from '@/types';
 import { toast } from "@/hooks/use-toast";
@@ -51,8 +51,13 @@ const Index = () => {
   const handleViewArticle = (id: string) => {
     const article = articles.find(a => a.id === id);
     if (article) {
-      // Check for archived article bug using checkActionForBug
-      checkActionForBug('archived', 'view');
+      // Check for archived article bug only if the current role shouldn't have access
+      if (article.status === 'archived' && !ARTICLE_VISIBILITY[activeRole].includes('archived')) {
+        console.log(`Bug check: ${activeRole} trying to view archived article (not allowed)`);
+        checkActionForBug('archived', 'view');
+      } else {
+        console.log(`No bug: ${activeRole} viewing archived article is allowed or article is not archived`);
+      }
       setViewArticle(article);
     }
   };
