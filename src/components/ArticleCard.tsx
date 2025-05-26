@@ -71,9 +71,15 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       </div>
       
       {/* Article content */}
-      <h3 className="article-card-title font-semibold">{article.title}</h3>
-      <p className="article-card-content mt-1 text-gray-600 text-sm flex-grow">{contentPreview}</p>
-      <div className="text-xs text-gray-500 mt-1">{t('article.category')}: {article.category}</div>
+      <h3 className="article-card-title font-semibold break-words hyphens-auto overflow-wrap-anywhere">
+        {article.title}
+      </h3>
+      <p className="article-card-content mt-1 text-gray-600 text-sm flex-grow break-words overflow-wrap-anywhere">
+        {contentPreview}
+      </p>
+      <div className="text-xs text-gray-500 mt-1 break-words">
+        {t('article.category')}: {article.category}
+      </div>
       
       {/* Action buttons based on user role and article status */}
       <div className="mt-3 flex flex-wrap items-center gap-2" onClick={(e) => e.stopPropagation()}>
