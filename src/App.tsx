@@ -13,15 +13,17 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <BugsProvider>
-        <Toaster />
-        <BrowserRouter basename="/simulators/state-transition-testing">
-           <Routes>
-             <Route path="/" element={<Index />} />
-             <Route path="*" element={<NotFound />} />
-           </Routes>
-        </BrowserRouter>
-      </BugsProvider>
+      <LanguageProvider>
+        <BugsProvider>
+          <Toaster />
+          <BrowserRouter basename="/simulators/state-transition-testing">
+             <Routes>
+               <Route path="/" element={<Index />} />
+               <Route path="*" element={<NotFound />} />
+             </Routes>
+          </BrowserRouter>
+        </BugsProvider>
+      </LanguageProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
